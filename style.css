@@ -5,7 +5,8 @@
 }
 body{
     color:white;
-    background-color: #050505;
+    /* background-color: #050505; */
+    background-color: black;
     font-family: 'Mozilla Text', sans-serif;
     min-height: 100vh;
     display: flex;
@@ -60,4 +61,41 @@ nav{
 .btn:hover{
     background: rgb(242, 240, 240);
     box-shadow: 0 0 4px white;
+    align-items: center;
+    padding: 24px 16px;
+}
+.hero{
+    display:flex;
+    justify-content: center;
+}
+.hero img{
+    display:block;
+    border-radius: 12px;
+    width: min(90vw, 600px);
+    height:auto;
+    max-height:90vh;
+    object-fit: cover;
+}
+.dash-cnt{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;  
+}
+.qoute{
+    /* padding: 5.5rem; */
+    padding-top:9rem;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    font-weight: 700;
+    font-size: 4.5rem;
+    padding-left: 5rem;
+}
+.qoute-part{
+    display:inline-block;
+    background-color: white;
+    color: black;
+    padding: 0 10px;
+    white-space: nowrap;
+    /* padding:10px; */
 }
