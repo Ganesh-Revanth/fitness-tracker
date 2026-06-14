@@ -52,16 +52,15 @@ nav{
     border-radius: 6px;
     font-weight: 600;
     font-size: 0.9rem;
-    background: rgb(227, 224, 224);
-    box-shadow: 0 0 5px rgba(166, 166, 168,0.9);
+    background: white;
     border:none;
     cursor:pointer;
     transition:0.3s;
 }
 .btn:hover{
     background: rgb(0, 0, 0);
-    color: white;
-    box-shadow: 0 0 4px rgb(0, 0, 0);
+    color: rgb(227, 224, 224);
+    box-shadow: 0 0 5px rgba(210, 210, 216, 0.9);
     align-items: center;
 }
 .hero{
@@ -78,31 +77,99 @@ nav{
 }
 .dash-cnt{
     display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-items: flex-start;
+    width: 100%;
+    padding: 20px; 
+    gap: 70px;
 }
 .qoute,.promo{
-    /* padding: 5.5rem; */
-    padding-top:9rem;
+    padding-top:11rem;
+    max-width: 25rem;
     display:flex;
     flex-direction: column;
-    align-items: center;
-    /* justify-content: center; */
     font-weight: 700;
-    font-size: 4.5rem;
-    padding-left: 5rem;
+    font-size: 3.5rem;
 }
 .qoute-part{
     display:inline-block;
     background-color: white;
     color: black;
     padding: 0 10px;
-    white-space: nowrap;
-    /* padding:10px; */
 }
 .promo1{
-    font-size:3rem;
+    text-align: right;
+    font-size:2.6rem;
+    margin-bottom: 1.4rem;
 }
 .promo2{
-    padding-top:3rem;
+    /* max-width: 20rem; */
+    text-align: right;
     font-weight: 400;
-    font-size:1.7rem;
+    font-size:1.3rem;
+}
+.sign_up2_cont, .mem_login2{
+    display:flex;
+    justify-content: center;
+}
+.sign_up2{
+    font-family: "mozilla text";
+    letter-spacing: 1px;
+    border-radius: 5px;
+    padding:0.4rem 7.5rem;
+    margin-top:2rem;
+    background-color: white;
+    color: black;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight:800;
+    transition: 0.4s;
+}
+.mem_login2{
+    padding-top:1rem;
+    font-size: 0.99rem;
+    font-weight: normal;
+}
+.log_in_txt{
+    text-decoration: underline;
+    color:white;
+}
+.sign_up2:hover{
+    color:white;
+    background-color: black;
+    box-shadow: 0 1px 10px whitesmoke;
+}
+footer{
+    background-color: #1a1a1a;
+    color:#ffffff;
+    border-top: 1px solid #333;
+}
+.footer_content{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap:2rem;
+    max-width: 1200px;
+    margin:0 auto;
+    padding: 1rem 2rem 1rem 2rem;
+}
+.footer_bottom{
+    text-align: center;
+    background-color: #111;
+    font-size: 0.8rem;
+    color: #777;
+    padding: 0.3rem 0;
+}
+.footer_bottom a{
+    color:white;
+}
+.footer_sec{
+    flex:1 1 250px;
+}
+.footer_sec p{
+    font-size: 0.9rem;
+    color: #ccc;
+    line-height: 1.6;
 }
