@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Fitness Tracker</title>
+        <title>Log In | Fitness Tracker</title>
         <link rel="stylesheet" href="style.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
     
     <body>
         <nav class="navabar">
-            <div class="logo"><a href="index.html">Fitness Tracker</a></div>
+            <div class="logo">Fitness Tracker</div>
             <ul class="nav-links">
                 <li><a href="index.html">Dashboard</a></li>
                 <li><a href="#">Workouts</a></li>
@@ -25,21 +25,26 @@
             </div>
             
         </nav>
-        <div class="dash-cnt">
-            <div class="qoute">
-                "DONT WISH FOR A GOOD BODY,<br> <span class="qoute-part">WORK FOR IT."</span>
-            </div>
-            <div class="hero">
-                <img alt="THE PAIN YOU FEEL TODAY IS THE PROGRESS YOU MAKE TOMORROW." src="assets/wallp.jpg" loading="lazy">
-            </div>
-            <div class="promo">
-                <span class="promo1">Built For Discipline</span> <br> <span class="promo2">Every workout counts. Track your training, measure your progress, and stay accountable. Log in or create an account to start building a stronger version of yourself.</span>
-                <br>
-                <div class="sign_up2_cont"><button class="sign_up2">SIGN UP</button></div>
-                <div class="mem_login2">Already a member? <a href="login.html"><span class="log_in_txt">Log In</span></a></div>
+        <div class="login_cnt">
+            <div class="login_form">
+                <h2>Welcome Back</h2>
+                <form >
+                    <div class="input">
+                        <label>Email</label>
+                        <input type="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="input">
+                        <label>Password</label>
+                        <input type="password" placeholder="Enter your password" required>
+                    </div>
+                    <button>Log In</button>
+                </form>
+                <p class="login_footer">
+                    Don't have an account? <a href="signup.html">Sign Up</a>
+                </p>
+                <a href="#">Forgot Password?</a>
             </div>
         </div>
-
         <footer class="footer">
             <div class="footer_content">
                 <div class="footer_sec">
