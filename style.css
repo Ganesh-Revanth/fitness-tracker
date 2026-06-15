@@ -55,18 +55,20 @@ nav{
     /* padding:0.5rem 1.5rem; */
     padding:0.3rem 1rem;
     border-radius: 6px;
-    font-weight: 600;
     font-size: 0.9rem;
     background: white;
     border:none;
     cursor:pointer;
-    transition:0.3s;
+    transition:all ease 0.4s;
 }
 .btn:hover{
     background: rgb(0, 0, 0);
     color: rgb(227, 224, 224);
     box-shadow: 0 0 5px rgba(210, 210, 216, 0.9);
     align-items: center;
+}
+.btn:active{
+    transform:scale(0.9);
 }
 .hero{
     display:flex;
@@ -183,33 +185,98 @@ footer{
     display:flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 6rem;
+    flex-wrap: wrap;
 }
 .login_form{
-    background-color: white;
+    background-color:white;
     color:black;
-    max-width: 23rem;
-    padding:2.5rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding:1.8rem 2rem;
+    display:flex;
+    flex-wrap: wrap;
+    max-width: 24rem;
+    border-radius: 10px;
+    justify-content: center;
 }
 .login_form a{
-    text-decoration: underline;
     color:black;
+    text-decoration: underline;
+}
+.login_footer a{
+    color:black;
+    text-decoration: underline;
 }
 .login_form h2{
-    margin-bottom: 1.2rem;
+    text-decoration:underline;
+    margin-bottom: 1.6rem;
     text-align: center;
 }
-.input{
-    margin-bottom: 1.2rem;
+.input_field{
     display:flex;
-    gap:0.5rem;
+    flex:1;
 }
-.input label{
+.input_field label{
+    flex:1;
+}
+.login_form form{
+    display:flex;
+    flex-wrap: wrap;
+    gap:1.4rem;
+}
+.log_btn{
     font-weight: 600;
-    font-size:0.9rem;
+    background-color: black;
+    color:white;
+    border:1px solid black;
+    border-radius: 3px;
+    font-size: 1rem;
+    padding: 0.4em 6.9rem;
+    margin-bottom: 1rem;
+    transition: all ease 0.49s;
+    cursor: pointer;
 }
-.input input{
-    padding:0.5rem 3rem;
-    border:1px solid #000000;
-    border-radius: 6px;
+.log_btn:hover{
+    background-color: white;
+    color: black;
+    box-shadow: 0px 2px 4px rgb(0, 0, 0);
+
+}
+.log_btn:active{
+    transform: scale(0.9);
+    box-shadow: 0 0 0;
+}
+.forgot_pass{
+    margin-top: 0.9rem;
+    display:flex;
+    justify-content: center;
+    margin-bottom: 0.9rem;
+}
+input{
+    border:1px solid black;
+    border-radius: 2px;
+    padding-left:0.1rem;
+    font-family: "mozilla text";
+    font-weight: 500;
+}
+.kratos{
+    opacity: 0.2;
+}
+.side1,.side2{
+    display:flex;
+    flex:1;
+    flex-wrap: wrap;
+}
+.side2{
+    justify-content: center;
+}
+.side2 img{
+    margin-top:3rem;
+    width:45%;
+}
+.side1{
+    align-items: center;
+    flex-direction: column;
+}
+.side1 img, .side2 img{
+    width:240px;
 }
