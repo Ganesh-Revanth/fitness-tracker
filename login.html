@@ -32,7 +32,7 @@
             </div>
             <div class="login_form">
                 <h2>Welcome Back!</h2>
-                <form >
+                <form id="login-form">
                     <div class="input_field">
                         <label>Email:</label><br>
                         <input type="email" id="login-email" placeholder="Enter your email" required>
@@ -40,14 +40,17 @@
                     <div class="input_field">
                         <label>Password:</label><br>
                         <input type="password" id="login-password" placeholder="Enter your password" required>
-                    </div>                    
+                    </div>
+                    <div class="lgn-options">
+                        <div class="forgot_pass">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+                        <div class="login-button-cnt">
+                            <button class="log_btn" id="login-btn" type="submit">Log In</button>
+                        </div> 
+                    </div>                 
                 </form>
-                <div class="forgot_pass">
-                    <a href="#">Forgot Password?</a>
-                </div>
-                <div>
-                    <button class="log_btn" id="login-btn">Log In</button>
-                </div>
+                
                 <p class="login_footer">
                     Don't have an account? <a href="signup.html">Sign Up</a>
                 </p>
@@ -70,5 +73,6 @@
                 &copy; 2026 Fitness Tracker -- Designed & Developed by <a href="https://github.com/Ganesh-Revanth">Ganesh Revanth</a>
             </div>
         </footer>
+        <script type="module" src="login.js"></script>
     </body>
 </html>
