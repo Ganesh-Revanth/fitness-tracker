@@ -32,14 +32,14 @@
             </div>
             <div class="login_form">
                 <h2>Welcome Back!</h2>
-                <form >
+                <form id="signup-form">
                     <div class="input_field">
                         <label>First Name:</label><br>
-                        <input type="text" placeholder="Enter your first name" required>
+                        <input type="text" id="firstName" placeholder="Enter your first name" required>
                     </div>
                     <div class="input_field">
                         <label>Last Name:</label><br>
-                        <input type="text" placeholder="Enter your last name" required>
+                        <input type="text" id="lastName" placeholder="Enter your last name" required>
                     </div>
                     <div class="input_field">
                         <label>Email:</label><br>
@@ -51,11 +51,11 @@
                     </div>
                     <div class="input_field">
                         <label>Birthdate:</label><br>
-                        <input type="date" placeholder="Enter your birthdate" required>
+                        <input type="date" id="birthdate" placeholder="Enter your birthdate" required>
                     </div>
                     <div class="input_field">
                         <label>Gender:</label><br>
-                        <select id="signup_gender">
+                        <select id="signup-gender">
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                             <option value="other">Others/Prefer not to say</option>
@@ -63,19 +63,17 @@
                     </div>
                     <div class="input_field">
                         <label>Weight:</label><br>
-                        <input type="number" placeholder="Enter your  weight (kg)" required>
+                        <input type="number" id="weight" placeholder="Enter your  weight (kg)" required>
                     </div>
                     <div class="input_field">
                         <label>Height:</label><br>
-                        <input type="text" placeholder="Enter your  height (cm)" required>
+                        <input type="text" id="height" placeholder="Enter your  height (cm)" required>
+                    </div>
+                    <div class="signup-btn">
+                        <button class="log_btn" id="signup-btn" type="submit">Sign Up</button>
                     </div>
                 </form>
-                <div class="forgot_pass">
-                    <a href="#">Forgot Password?</a>
-                </div>
-                <div>
-                    <button class="log_btn" id="signup-btn">Sign Up</button>
-                </div>
+                
                 <p class="login_footer">
                     Don't have an account? <a href="signup.html">Sign Up</a>
                 </p>
@@ -98,5 +96,6 @@
                 &copy; 2026 Fitness Tracker -- Designed & Developed by <a href="https://github.com/Ganesh-Revanth">Ganesh Revanth</a>
             </div>
         </footer>
+        <script type="module" src="signup.js"></script>
     </body>
 </html>

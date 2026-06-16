@@ -296,3 +296,8 @@ input{
     font-size: 1.1rem;
     text-align: center;
 }
+.signup-btn{
+    flex:1;
+    display:flex;
+    justify-content: center;
+}
