@@ -310,3 +310,41 @@ input{
     align-items: center;
     justify-content: center;
 }
+.dashboard-cnt{
+    flex:1;
+}
+#notification {
+    position: fixed;
+    top:100px;
+    left:50%;
+    transform: translateX(-50%);
+    opacity: 0;
+
+    padding: 15px 25px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.8);
+    background-color: rgb(255, 255, 255);
+    color:black;
+    pointer-events: none;
+}
+#notification.show{
+    animation:notify 2.5s ease forwards;
+}
+@keyframes notify{
+    0%{
+        opacity:0;
+        transform:translateX(-50%) translateY(-20px);
+    }
+    15%{
+        opacity:1;
+        transform:translateX(-50%) translateY(0);
+    }
+    85%{
+        opacity:1;
+        transform:translateX(-50%) translateY(0);
+    }
+    100%{
+        opacity:0;
+        transform:translateX(-50%) translateY(-20px);
+    }
+}

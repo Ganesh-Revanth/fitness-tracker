@@ -1,6 +1,7 @@
 import { auth, db } from "./firebase.js";
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+import { notify } from "./notifications.js";
 
 const form = document.getElementById("signup-form");
 
@@ -22,6 +23,8 @@ form.addEventListener("submit", async (e) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
+        await sendEmailVerification(user);
+        
         await setDoc(doc(db, "users", user.uid), {
             firstName,
             lastName,
@@ -32,9 +35,16 @@ form.addEventListener("submit", async (e) => {
             height,
             createdAt: Date.now()
         });
+        await signOut(auth);
 
-        window.location.href = "dashboard.html";
+        sessionStorage.setItem(
+            "notification",
+            "Verification email sent. Check your inbox/spam."
+        );
+
+        window.location.href = "login.html";
     } catch (error) {
-        alert(error.message);
+        notify(error.message);
+        console.log(error.message);
     }
 });
