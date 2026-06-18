@@ -28,12 +28,19 @@ nav{
     align-items: center;
     justify-content: space-between;
     position: sticky;
+    max-height: 3.3rem;
 }
 .logo{
     font-size:1.8rem;
     font-weight: 700;
     color:white;
     letter-spacing: 1px;
+    overflow: hidden;
+}
+.logo_img{
+    margin-top:0.5rem;
+    width:15%;
+     overflow: hidden;
 }
 .nav-links{
     list-style:none;
@@ -64,7 +71,7 @@ nav{
 .btn:hover{
     background: rgb(0, 0, 0);
     color: rgb(227, 224, 224);
-    box-shadow: 0 0 5px rgba(210, 210, 216, 0.9);
+    /* box-shadow: 0 0 5px rgba(210, 210, 216, 0.9); */
     align-items: center;
 }
 .btn:active{
@@ -150,7 +157,8 @@ nav{
 .sign_up2:hover{
     color:white;
     background-color: black;
-    box-shadow: 0 1px 10px whitesmoke;
+    box-shadow: 0 0 13px rgba(0,255,136,0.8);       
+    border: 3px solid rgba(0, 255, 136, 0.6);
 }
 footer{
     background-color: #1a1a1a;
