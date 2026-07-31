@@ -24,3 +24,17 @@ onAuthStateChanged(auth, async (user) => {
         document.getElementById("username").textContent = data.firstName;
     }
 });
+
+const toggleButton = document.getElementById('toggle-btn')
+const sidebar = document.getElementById('sidebar')
+
+toggleButton.addEventListener("click", toggleSidebar);  
+
+function toggleSidebar(){
+    sidebar.classList.toggle('close')
+    if (sidebar.classList.contains("close")) {
+        toggleButton.textContent = ">>";
+    } else {
+        toggleButton.textContent = "Collapse Menu <<";
+    }
+}
