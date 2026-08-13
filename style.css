@@ -409,7 +409,7 @@ aside{
     pointer-events: none;
 }
 #notification.show{
-    animation:notify 2.5s ease forwards;
+    animation:notify 3s ease forwards;
 }
 @keyframes notify{
     0%{

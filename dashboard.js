@@ -1,5 +1,5 @@
 import { auth, db } from "./firebase.js";
-import { onAuthStateChanged }   from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import { onAuthStateChanged, signOut, sendEmailVerification }   from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { doc, getDoc }  from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { notify } from "./notifications.js";
 
@@ -10,8 +10,21 @@ if(message) {
 }
 onAuthStateChanged(auth, async (user) => {
 
-    if(!user) {
+    if (!user) {
         window.location.href = "login.html";
+        return;
+    }
+
+    // block access for unverified email addresses
+    if (!user.emailVerified) {
+        try {
+            await sendEmailVerification(user);
+        } catch (e) {
+            console.warn('Failed to send verification email on dashboard access', e);
+        }
+        await signOut(auth);
+        sessionStorage.setItem('notification', 'Please verify your email before accessing the dashboard. A verification link was sent.');
+        window.location.href = 'login.html';
         return;
     }
 

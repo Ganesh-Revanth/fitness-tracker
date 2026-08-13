@@ -1,5 +1,5 @@
 import { auth } from "./firebase.js";
-import { signInWithEmailAndPassword }   from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import { signInWithEmailAndPassword, sendEmailVerification, signOut }   from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { notify } from "./notifications.js";
 
 const form = document.getElementById("login-form");
@@ -18,17 +18,30 @@ form.addEventListener("submit", async (e) => {
 
     try{
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-        sessionStorage.setItem(
-            "notification",
-            "Logged in Successfully!"
-        );
-        console.log("Logged in:", userCredential.user);
+        if (!user.emailVerified) {
+            // resend verification and sign out
+            try {
+                await sendEmailVerification(user);
+            } catch (e) {
+                console.warn('sendEmailVerification failed', e);
+            }
+            await signOut(auth);
+            const msg = "Verify your email to login";
+            // immediate feedback
+            try { notify(msg); } catch (e) { console.warn('notify failed', e); }
+            // persist for next load
+            sessionStorage.setItem("notification", msg);
+            return;
+        }
 
+        sessionStorage.setItem("notification", "Logged in Successfully!");
+        console.log("Logged in:", user);
         window.location.href = "dashboard.html";
     } catch (error) {
         notify(error.message);
-        console(error.message);
+        console.log(error.message);
         console.error(error);
     }
     
