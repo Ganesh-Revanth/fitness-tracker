@@ -64,21 +64,54 @@
                 </ul>
             </aside>
             <main>
-                <section class="welcome-area cards-container">
-                    <div class="welcome-card card">
-                        <div class="welcome-left">
-                            <h2 id="user-fullname">Welcome</h2>
-                            <p id="user-role" class="muted">Member</p>
-                            <p class="small">Member since <span id="member-since">-</span></p>
-                        </div>
-                        <div class="welcome-stats">
-                            <div class="stat">
-                                <div class="stat-value" id="workouts-count">—</div>
-                                <div class="stat-label">Workouts</div>
+                <section class="cards-container">
+                    <!-- Generic greeting card using the shared .card class -->
+                    <div class="card" id="greeting-card">
+                        <h2 id="greeting">Welcome</h2>
+                        <p id="welcome-quote" class="muted small">"Stay consistent — small steps add up."</p>
+                        <p class="small">Member since <span id="member-since">-</span></p>
+                    </div>
+
+                    <!-- Trackers grouped into a single card -->
+                    <div class="card trackers-card" id="trackers-card">
+                        <div class="trackers-grid">
+                            <div class="tracker" id="tracker-weight">
+                                <div class="tracker-icon">⚖️</div>
+                                <div class="tracker-body">
+                                    <div class="tracker-label">Current Weight</div>
+                                    <div class="tracker-value" id="weight-value">— kg</div>
+                                    <div class="tracker-sub" id="weight-change">—</div>
+                                    <div class="sparkline" id="weight-spark"></div>
+                                </div>
                             </div>
-                            <div class="stat">
-                                <div class="stat-value" id="calories-today">—</div>
-                                <div class="stat-label">Calories today</div>
+
+                            <div class="tracker" id="tracker-calories">
+                                <div class="tracker-icon">🔥</div>
+                                <div class="tracker-body">
+                                    <div class="tracker-label">Calories</div>
+                                    <div class="tracker-value"><span id="calories-value">—</span> / <span id="calories-target">—</span> kcal</div>
+                                    <div class="progress">
+                                        <div class="progress-bar" id="calories-progress" style="width:0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tracker" id="tracker-water">
+                                <div class="tracker-icon">💧</div>
+                                <div class="tracker-body">
+                                    <div class="tracker-label">Water</div>
+                                    <div class="tracker-value"><span id="water-value">—</span> / <span id="water-target">—</span> L</div>
+                                    <div class="water-drops" id="water-drops"></div>
+                                </div>
+                            </div>
+
+                            <div class="tracker" id="tracker-streak">
+                                <div class="tracker-icon">🔥</div>
+                                <div class="tracker-body">
+                                    <div class="tracker-label">Streak</div>
+                                    <div class="tracker-value" id="streak-value">— Days</div>
+                                    <div class="tracker-sub" id="streak-best">Best: — Days</div>
+                                </div>
                             </div>
                         </div>
                     </div>
