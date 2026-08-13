@@ -22,19 +22,41 @@ onAuthStateChanged(auth, async (user) => {
         const data = userSnap.data();
 
         document.getElementById("username").textContent = data.firstName;
+        // Populate welcome card fields if present
+        try {
+            const fullNameEl = document.getElementById('user-fullname');
+            const memberSinceEl = document.getElementById('member-since');
+            const workoutsCountEl = document.getElementById('workouts-count');
+            const caloriesEl = document.getElementById('calories-today');
+
+            if (fullNameEl) fullNameEl.textContent = `${data.firstName || ''} ${data.lastName || ''}`.trim() || data.firstName || 'Welcome';
+
+            if (memberSinceEl) {
+                const created = data.createdAt;
+                let dateStr = '-';
+                if (created && typeof created.toDate === 'function') {
+                    dateStr = created.toDate().toLocaleDateString();
+                } else if (created) {
+                    const d = new Date(created);
+                    if (!isNaN(d)) dateStr = d.toLocaleDateString();
+                }
+                memberSinceEl.textContent = dateStr;
+            }
+
+            if (workoutsCountEl) {
+                const workouts = data.workouts;
+                if (Array.isArray(workouts)) workoutsCountEl.textContent = workouts.length;
+                else if (typeof data.workoutsCount === 'number') workoutsCountEl.textContent = data.workoutsCount;
+                else workoutsCountEl.textContent = '0';
+            }
+
+            if (caloriesEl) {
+                caloriesEl.textContent = data.caloriesToday || data.todayCalories || (data.stats && data.stats.caloriesToday) || '—';
+            }
+        } catch (e) {
+            console.warn('Welcome card population error', e);
+        }
     }
 });
 
-const toggleButton = document.getElementById('toggle-btn')
-const sidebar = document.getElementById('sidebar')
-
-toggleButton.addEventListener("click", toggleSidebar);  
-
-function toggleSidebar(){
-    sidebar.classList.toggle('close')
-    if (sidebar.classList.contains("close")) {
-        toggleButton.textContent = ">>";
-    } else {
-        toggleButton.textContent = "Collapse Menu <<";
-    }
-}
+// Sidebar is now controlled by CSS hover (expand on hover); no JS toggle required.
