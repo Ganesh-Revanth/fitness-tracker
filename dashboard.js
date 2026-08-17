@@ -8,6 +8,21 @@ if(message) {
     notify(message);
     sessionStorage.removeItem("notification");
 }
+
+const logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+            sessionStorage.setItem('notification', 'Logged out successfully.');
+            window.location.href = 'login.html';
+        } catch (error) {
+            console.error('Logout failed:', error);
+            notify('Failed to log out. Please try again.');
+        }
+    });
+}
+
 onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
@@ -103,8 +118,11 @@ onAuthStateChanged(auth, async (user) => {
 
     if(userSnap.exists()) {
         const data = userSnap.data();
+        const profileNameEl = document.getElementById('profile-name');
+        const userName = data.firstName || data.displayName || (data.email ? data.email.split('@')[0] : 'User');
 
-        document.getElementById("username").textContent = data.firstName;
+        document.getElementById("username").textContent = userName;
+        if (profileNameEl) profileNameEl.textContent = userName;
         // Populate welcome card fields if present
         try {
             const greetingEl = document.getElementById('greeting');
@@ -171,5 +189,3 @@ onAuthStateChanged(auth, async (user) => {
         }
     }
 });
-
-// Sidebar is now controlled by CSS hover (expand on hover); no JS toggle required.

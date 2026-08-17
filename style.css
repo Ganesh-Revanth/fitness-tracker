@@ -24,7 +24,7 @@ a {
 nav {
     width: 100%;
     padding: 0.4rem 5%;
-    background-color: #2e2e2f;
+    background-color: #2e2e2f78;
     border-bottom: 1px solid rgba(44, 44, 44, 0.5);
     backdrop-filter: blur(15px);
     /* margin-bottom: 2rem; */
@@ -59,8 +59,18 @@ nav {
 
 .btns {
     display: flex;
+    align-items: center;
     gap: 1rem;
     margin-left: 1rem;
+}
+
+.profile-name {
+    font-family: 'Mozilla Text', 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
 }
 
 .btn {
@@ -100,24 +110,26 @@ nav {
 }
 
 .dash-cnt {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) minmax(280px, 640px) minmax(220px, 1fr);
     align-items: center;
-    align-items: flex-start;
-    width: 100%;
-    padding: 20px;
-    gap: 70px;
+    justify-items: center;
+    width: min(100%, 1500px);
+    margin: 0 auto;
+    padding: 2rem 20px 0;
+    gap: clamp(1rem, 2.5vw, 3rem);
 }
 
 .qoute,
 .promo {
-    padding-top: 11rem;
+    width: 100%;
     max-width: 25rem;
     display: flex;
     flex-direction: column;
     font-weight: 700;
-    font-size: 3.5rem;
+    font-size: clamp(2.2rem, 2.6vw, 3.5rem);
+    padding-top: 0;
+    margin: 0;
 }
 
 .qoute-part {
@@ -129,7 +141,7 @@ nav {
 
 .promo1 {
     text-align: right;
-    font-size: 2.6rem;
+    font-size: clamp(2rem, 1.7vw, 2.6rem);
     margin-bottom: 1.4rem;
 }
 
@@ -137,7 +149,23 @@ nav {
     /* max-width: 20rem; */
     text-align: right;
     font-weight: 400;
-    font-size: 1.3rem;
+    font-size: clamp(1rem, 1.1vw, 1.3rem);
+}
+
+@media (max-width: 1100px) {
+    .dash-cnt {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    .qoute,
+    .promo,
+    .promo1,
+    .promo2 {
+        text-align: center;
+        max-width: 100%;
+    }
 }
 
 .sign_up2_cont,
@@ -390,8 +418,10 @@ aside {
     box-sizing: border-box;
     height: 100vh;
     width: 64px;
-    background-color: #2e2e2f;
-    border-right: 1px solid rgba(255, 255, 255, 0.55);
+    /* background-color: #2e2e2f; */
+    background-color: #2e2e2f78;
+    /* border-right: 1px solid rgba(255, 255, 255, 0.55); */
+    border-right: 2px solid rgba(255, 255, 255, 0.758);
     position: sticky;
     top: 0;
     align-self: start;
@@ -674,27 +704,23 @@ aside {
 main {
     border-top: 1px solid rgba(255, 255, 255, 0.55);
 }
-
-/* Dashboard-only: compact top nav (sidebar holds primary navigation) */
 .dashboard-page nav {
     padding: 0.25rem 4%;
     max-height: 3rem;
 }
 
 .dashboard-page .logo_img {
-    width: 6rem;
+    width: 7.5rem;
 }
 
 .dashboard-page .nav-links {
     gap: 1rem;
 }
 
-/* hide primary nav links on dashboard (sidebar provides navigation) */
 .dashboard-page .nav-links li {
     display: none;
 }
 
-/* keep username visible and aligned right */
 .dashboard-page .nav-links #username {
     display: block;
     margin-left: auto;

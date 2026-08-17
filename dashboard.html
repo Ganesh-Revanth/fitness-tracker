@@ -12,15 +12,18 @@
     </head>
     
     <body class="dashboard-page">
-        <nav class="navabar">
+        <nav class="navbar">
             <div class="logo"><a href="index.html"><img src="assets/logo.png" class="logo_img" alt="FT26"></a></div>
             <ul class="nav-links">
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="#">Workouts</a></li>
                 <li><a href="#">Records</a></li>
-                <div id="username">Loading...</div>
+                <li><div id="username">Loading...</div></li>
             </ul>
-            
+            <div class="btns">
+                <span id="profile-name" class="profile-name">User</span>
+                <input id="logout-btn" class="btn" type="button" value="LOG OUT" />
+            </div>
         </nav>
         <div class="dashboard-cnt">
             <aside id="sidebar">
