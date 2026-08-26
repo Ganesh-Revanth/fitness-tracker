@@ -3,6 +3,7 @@
     <head>
         <title>Fitness Tracker</title>
         <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -16,7 +17,7 @@
             <div class="logo"><a href="index.html"><img src="assets/logo.png" class="logo_img" alt="FT26"></a></div>
             <ul class="nav-links">
                 <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="#">Workouts</a></li>
+                <li><a href="#workouts" data-section-link="workouts">Workouts</a></li>
                 <li><a href="#">Records</a></li>
                 <li><div id="username">Loading...</div></li>
             </ul>
@@ -28,55 +29,77 @@
         <div class="dashboard-cnt">
             <aside id="sidebar">
                 <ul>
-                    <li class="active">
-                        <a href="dashboard.html">
+                    <li data-section="dashboard">
+                        <a href="#dashboard">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#CCDAF5"><path d="M520-600v-240h320v240H520ZM120-440v-400h320v400H120Zm400 320v-400h320v400H520Zm-400 0v-240h320v240H120Zm80-400h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li>
-                        <a>
+                    <li data-section="workouts">
+                        <a href="#workouts">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="m536-84-56-56 142-142-340-340-142 142-56-56 56-58-56-56 84-84-56-58 56-56 58 56 84-84 56 56 58-56 56 56-142 142 340 340 142-142 56 56-56 58 56 56-84 84 56 58-56 56-58-56-84 84-56-56-58 56Z"/></svg>
                             <span>Workouts</span>
                         </a>
                     </li>
-                    <li>
+                    <li data-section="nutrition">
                         <a href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-200h60v-270q26-8 43-28.5t17-49.5v-152q0-8-6-14t-14-6q-8 0-14 6t-6 14v100h-30v-100q0-8-6-14t-14-6q-8 0-14 6t-6 14v100h-30v-100q0-8-6-14t-14-6q-8 0-14 6t-6 14v152q0 29 17 49.5t43 28.5v270Zm240 0h60v-254q33-16 51.5-51t18.5-82q0-57-28.5-95T590-720q-43 0-71.5 38T490-587q0 47 18.5 82t51.5 51v254ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v640q0 33-23.5 56.5T800-80H160Zm0-80h640v-640H160v640Zm0 0v-640 640Z"/></svg>
                             <span>Nutrition</span>
                         </a>
                     </li>
-                    <li>
+                    <li data-section="progress">
                         <a href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M80-120v-80h800v80H80Zm40-120v-280h120v280H120Zm200 0v-480h120v480H320Zm200 0v-360h120v360H520Zm200 0v-600h120v600H720Z"/></svg>
                             <span>Progress</span>
                         </a>
                     </li>
-                    <li>
+                    <li data-section="records">
                         <a href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm285 93q35-35 35-85v-240H360v240q0 50 35 85t85 35q50 0 85-35Zm115-93q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z"/></svg>
                             <span>Records</span>
                         </a>
                     </li>
-                    <li>
+                    <li data-section="settings">
                         <a href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M367-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm296.5-343.5Q560-607 560-640t-23.5-56.5Q513-720 480-720t-56.5 23.5Q400-673 400-640t23.5 56.5Q447-560 480-560t56.5-23.5ZM480-640Zm0 400Z"/></svg>
-                            <span>Profile</span>
+                            <span>Settings</span>
                         </a>
                     </li>
                 </ul>
+                <section class="card streak-card sidebar-streak-card" id="streak-progress-card" data-panel="dashboard" aria-labelledby="streak-card-title">
+                    <div class="streak-card-topline">
+                        <span class="streak-flame" aria-hidden="true">&#128293;</span>
+                        <div>
+                            <h2 id="streak-card-title">Streak</h2>
+                            <p><strong id="streak-card-value">0</strong> Days</p>
+                        </div>
+                    </div>
+                    <p class="streak-message">Keep it up!</p>
+                    <div class="streak-week" aria-label="Weekly workout streak">
+                        <div class="streak-days" id="streak-days">
+                            <span class="streak-day complete">&#10003;</span>
+                            <span class="streak-day complete">&#10003;</span>
+                            <span class="streak-day complete">&#10003;</span>
+                            <span class="streak-day complete">&#10003;</span>
+                            <span class="streak-day complete">&#10003;</span>
+                            <span class="streak-day complete">&#10003;</span>
+                            <span class="streak-day"></span>
+                        </div>
+                        <div class="streak-labels"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+                    </div>
+                </section>
             </aside>
             <main>
                 <section class="cards-container">
                     <!-- Generic greeting card using the shared .card class -->
-                    <div class="card" id="greeting-card">
+                    <div class="card" id="greeting-card" data-panel="dashboard">
                         <h2 id="greeting">Welcome</h2>
                         <p id="welcome-quote" class="muted small">"Stay consistent — small steps add up."</p>
                         <p class="small">Member since <span id="member-since">-</span></p>
                     </div>
 
                     <!-- Trackers grouped into a single card -->
-                    <div class="card trackers-card" id="trackers-card">
+                    <div class="card trackers-card" id="trackers-card" data-panel="dashboard">
                         <div class="trackers-grid">
                             <div class="tracker" id="tracker-weight">
                                 <div class="tracker-icon">⚖️</div>
@@ -118,7 +141,208 @@
                             </div>
                         </div>
                     </div>
+
+                    
+
+                    <section class="card weight-chart-card" id="weight-progress-card" data-panel="dashboard" aria-labelledby="weight-progress-title">
+                        <div class="chart-card-header">
+                            <div class="chart-title-wrap">
+                                <span class="chart-icon" aria-hidden="true">&#8599;</span>
+                                <h2 id="weight-progress-title">Weight Progress</h2>
+                            </div>
+                            <label class="chart-filter">Range
+                                <select id="weight-range" aria-label="Weight chart range">
+                                    <option value="month">This Month</option>
+                                    <option value="all">All Time</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="weight-chart-wrap">
+                            <canvas id="weight-progress-chart" aria-label="Weight progress chart"></canvas>
+                        </div>
+                        <form id="weight-entry-form" class="weight-entry-form">
+                            <label for="weight-entry">Log weight</label>
+                            <div class="weight-entry-controls">
+                                <input id="weight-entry" name="weight" type="number" min="20" max="500" step="0.1" placeholder="e.g. 71.3" required>
+                                <span>kg</span>
+                                <button type="submit">Add weight</button>
+                            </div>
+                            <p id="weight-entry-status" class="weight-entry-status" role="status" aria-live="polite"></p>
+                        </form>
+                    </section>
+
+                    <section class="card workout-card" id="today-workout" data-panel="workouts" aria-labelledby="today-workout-title">
+                        <div class="workout-card-header">
+                            <div>
+                                <p class="eyebrow">Today's Workout</p>
+                                <h2 id="today-workout-title">Push Day</h2>
+                            </div>
+                            <span class="workout-icon" aria-hidden="true">&#9878;</span>
+                        </div>
+                        <div class="workout-progress-row">
+                            <span id="workout-progress-label">0 / 5 exercises</span>
+                            <span id="workout-progress-percent">0%</span>
+                        </div>
+                        <div class="progress workout-progress" role="progressbar" aria-label="Today's workout progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                            <div class="progress-bar" id="workout-progress-bar"></div>
+                        </div>
+                        <ul class="workout-checklist" id="workout-checklist">
+                            <li><label><input type="checkbox" data-workout-index="0"><span><strong>Chest</strong><small>Bench Press</small></span></label></li>
+                            <li><label><input type="checkbox" data-workout-index="1"><span><strong>Shoulders</strong><small>Overhead Press</small></span></label></li>
+                            <li><label><input type="checkbox" data-workout-index="2"><span><strong>Triceps</strong><small>Pushdowns</small></span></label></li>
+                            <li><label><input type="checkbox" data-workout-index="3"><span><strong>Chest</strong><small>Incline Dumbbell Press</small></span></label></li>
+                            <li><label><input type="checkbox" data-workout-index="4"><span><strong>Core</strong><small>Plank</small></span></label></li>
+                        </ul>
+                        <a class="workout-card-link" href="#workouts" data-section-link="workouts">Open workout details <span aria-hidden="true">&#8594;</span></a>
+                    </section>
+                    
+                    <section class="card body-metrics-card" id="body-metrics-card" data-panel="dashboard" aria-labelledby="body-metrics-title">
+                        <h2 id="body-metrics-title" class="visually-hidden">Body metrics</h2>
+                        <div class="body-metric">
+                            <span class="body-metric-icon" aria-hidden="true">&#9878;</span>
+                            <span class="body-metric-label">Weight</span>
+                            <strong id="metric-weight">—</strong><small>kg</small>
+                        </div>
+                        <div class="body-metric">
+                            <span class="body-metric-icon" aria-hidden="true">&#9673;</span>
+                            <span class="body-metric-label">BMI</span>
+                            <strong id="metric-bmi">—</strong>
+                            <small id="metric-bmi-status">—</small>
+                        </div>
+                        <div class="body-metric">
+                            <span class="body-metric-icon" aria-hidden="true">&#8597;</span>
+                            <span class="body-metric-label">Height</span>
+                            <strong id="metric-height">—</strong><small>cm</small>
+                        </div>
+                    </section>
+
+                    <section class="card today-checklist-card" aria-labelledby="today-checklist-title">
+                        <h2 id="today-checklist-title">Today's Checklist</h2>
+                        <ul id="today-checklist-list" class="today-checklist" aria-live="polite"></ul>
+                    </section>
                 </section>
+                
+                <section id="workout-page" class="workout-page-view" aria-labelledby="workout-page-title" hidden>
+                    <div class="workout-page-heading">
+                        <button id="back-to-dashboard" class="back-link" type="button">&#8592; Dashboard</button>
+                        <p class="eyebrow">Training session</p>
+                        <h1 id="workout-page-title">Push Day</h1>
+                        <p class="muted">Complete each exercise to finish today's workout.</p>
+                    </div>
+                    <div class="workout-page-content">
+                        <div class="card workout-summary-card">
+                            <div class="workout-card-header">
+                                <div><p class="eyebrow">Today's Workout</p><h2>Push Day</h2></div>
+                                <span class="workout-icon" aria-hidden="true">&#9878;</span>
+                            </div>
+                            <div class="workout-progress-row">
+                                <span id="page-workout-progress-label">0 / 5 exercises</span>
+                                <span id="page-workout-progress-percent">0%</span>
+                            </div>
+                            <div class="progress workout-progress" role="progressbar" aria-label="Workout page progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                <div class="progress-bar" id="page-workout-progress-bar"></div>
+                            </div>
+                        </div>
+                        <div class="card workout-page-list">
+                            <h2>Exercises</h2>
+                            <ul class="workout-checklist" id="page-workout-checklist">
+                                <li><label><input type="checkbox" data-workout-index="0"><span><strong>Chest</strong><small>Bench Press · 4 sets</small></span></label></li>
+                                <li><label><input type="checkbox" data-workout-index="1"><span><strong>Shoulders</strong><small>Overhead Press · 3 sets</small></span></label></li>
+                                <li><label><input type="checkbox" data-workout-index="2"><span><strong>Triceps</strong><small>Pushdowns · 3 sets</small></span></label></li>
+                                <li><label><input type="checkbox" data-workout-index="3"><span><strong>Chest</strong><small>Incline Dumbbell Press · 3 sets</small></span></label></li>
+                                <li><label><input type="checkbox" data-workout-index="4"><span><strong>Core</strong><small>Plank · 3 rounds</small></span></label></li>
+                            </ul>
+                        </div>
+
+                        <section class="card checklist-editor-card" aria-labelledby="checklist-editor-title">
+                            <div class="workout-card-header checklist-header">
+                                <div>
+                                    <p class="eyebrow">Daily habits</p>
+                                    <h2 id="checklist-editor-title">Edit Today's Checklist</h2>
+                                </div>
+                                <button type="button" class="secondary-btn" id="add-checklist-item">+ Add item</button>
+                            </div>
+                            <ul id="checklist-editor-list" class="checklist-editor-list"></ul>
+                        </section>
+                    </div>
+                </section>
+
+                <section id="settings-page" class="settings-page-view" aria-labelledby="settings-page-title" hidden>
+                    <div class="settings-page-heading">
+                        <p class="eyebrow">Account preferences</p>
+                        <h1 id="settings-page-title">Settings</h1>
+                        <p class="muted">Manage your account and dashboard appearance.</p>
+                    </div>
+
+                    <div class="settings-grid">
+                        <section class="card settings-card">
+                            <div class="settings-card-heading">
+                                <div>
+                                    <p class="eyebrow">Profile</p>
+                                    <h2>Personal details</h2>
+                                </div>
+                            </div>
+                            <form id="profile-settings-form" class="settings-form">
+                                <label>First name<input id="settings-first-name" type="text" autocomplete="given-name" required></label>
+                                <label>Last name<input id="settings-last-name" type="text" autocomplete="family-name"></label>
+                                <button class="settings-save-btn" type="submit">Save name</button>
+                                <p id="profile-settings-status" class="settings-status" role="status" aria-live="polite"></p>
+                            </form>
+                        </section>
+
+                        <section class="card settings-card">
+                            <div class="settings-card-heading">
+                                <div>
+                                    <p class="eyebrow">Login email</p>
+                                    <h2>Change email</h2>
+                                </div>
+                            </div>
+                            <form id="email-settings-form" class="settings-form">
+                                <label>New email<input id="settings-email" type="email" autocomplete="email" required></label>
+                                <button class="settings-save-btn" type="submit">Update email</button>
+                                <p id="email-settings-status" class="settings-status" role="status" aria-live="polite"></p>
+                            </form>
+                        </section>
+
+                        <section class="card settings-card">
+                            <div class="settings-card-heading">
+                                <div>
+                                    <p class="eyebrow">Account security</p>
+                                    <h2>Change password</h2>
+                                </div>
+                            </div>
+                            <form id="password-settings-form" class="settings-form">
+                                <label>New password<input id="settings-password" type="password" minlength="6" autocomplete="new-password" required></label>
+                                <label>Confirm password<input id="settings-password-confirm" type="password" minlength="6" autocomplete="new-password" required></label>
+                                <button class="settings-save-btn" type="submit">Update password</button>
+                                <p id="password-settings-status" class="settings-status" role="status" aria-live="polite"></p>
+                            </form>
+                        </section>
+
+                        <section class="card settings-card appearance-card">
+                            <div class="settings-card-heading">
+                                <div>
+                                    <p class="eyebrow">Appearance</p>
+                                    <h2>Theme</h2>
+                                </div>
+                            </div>
+                            <div class="settings-theme-options" aria-label="Theme selector">
+                                <button type="button" class="theme-btn" data-theme="green">Green</button>
+                                <button type="button" class="theme-btn" data-theme="electric">Electric blue</button>
+                                <button type="button" class="theme-btn" data-theme="amber">Amber</button>
+                                <button type="button" class="theme-btn" data-theme="crimson">Crimson</button>
+                                <button type="button" class="theme-btn" data-theme="monochrome">Black &amp; white</button>
+                            </div>
+                            <label class="card-theme-toggle">
+                                <input id="card-theme-toggle" type="checkbox">
+                                <span>Use themed card backgrounds</span>
+                            </label>
+                            <p id="theme-settings-status" class="settings-status">Theme is saved on this device.</p>
+                        </section>
+                    </div>
+                </section>
+
+                
             </main>
         </div>
 

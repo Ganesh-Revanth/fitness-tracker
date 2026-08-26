@@ -33,7 +33,8 @@ form.addEventListener("submit", async (e) => {
             gender,
             weight,
             height,
-            createdAt: Date.now()
+            createdAt: Date.now(),
+            dailyChecklist: []
         });
         await signOut(auth);
 

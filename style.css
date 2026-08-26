@@ -3,17 +3,131 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Mozilla Text', sans-serif;
+    border-radius: 0 !important;
+}
+
+:root {
+    --bg-1: #020706;
+    --bg-2: #0d1414;
+    --panel: rgba(17, 25, 27, 0.96);
+    --panel-alt: rgba(11, 18, 19, 0.96);
+    --card-border: rgba(126, 247, 161, 0.22);
+    --text: #eefaf2;
+    --muted: #b9cfc3;
+    --accent: #7ef7a2;
+    --accent-strong: #70ff72;
+    --accent-soft: rgba(126, 247, 161, 0.12);
+    --line: rgba(255, 255, 255, 0.12);
+    --shadow: none;
+}
+
+body.theme-electric {
+    --bg-1: #030814;
+    --bg-2: #0c182a;
+    --panel: rgba(14, 21, 35, 0.96);
+    --panel-alt: rgba(10, 16, 25, 0.96);
+    --card-border: rgba(96, 202, 255, 0.22);
+    --text: #edf6ff;
+    --muted: #b5c7d8;
+    --accent: #6ee7ff;
+    --accent-strong: #49d0ff;
+    --accent-soft: rgba(110, 231, 255, 0.12);
+    --line: rgba(153, 206, 255, 0.18);
+}
+
+body.theme-amber {
+    --bg-1: #120b07;
+    --bg-2: #20150f;
+    --panel: rgba(29, 20, 15, 0.96);
+    --panel-alt: rgba(18, 12, 10, 0.96);
+    --card-border: rgba(255, 179, 85, 0.28);
+    --text: #fff4ea;
+    --muted: #e8d2b8;
+    --accent: #ffba6b;
+    --accent-strong: #ff9f43;
+    --accent-soft: rgba(255, 186, 107, 0.14);
+    --line: rgba(255, 212, 152, 0.16);
+}
+
+body.theme-crimson {
+    --bg-1: #0d0708;
+    --bg-2: #1b0d12;
+    --panel: rgba(29, 13, 18, 0.96);
+    --panel-alt: rgba(18, 10, 12, 0.96);
+    --card-border: rgba(255, 107, 107, 0.25);
+    --text: #fff1f3;
+    --muted: #e6c4ca;
+    --accent: #ff7e7e;
+    --accent-strong: #ff5d5d;
+    --accent-soft: rgba(255, 126, 126, 0.12);
+    --line: rgba(255, 180, 180, 0.16);
+}
+
+body.theme-monochrome {
+    --bg-1: #000000;
+    --bg-2: #171717;
+    --panel: rgba(20, 20, 20, 0.98);
+    --panel-alt: rgba(8, 8, 8, 0.98);
+    --card-border: rgba(255, 255, 255, 0.28);
+    --text: #ffffff;
+    --muted: #c4c4c4;
+    --accent: #ffffff;
+    --accent-strong: #ffffff;
+    --accent-soft: rgba(255, 255, 255, 0.12);
+    --line: rgba(255, 255, 255, 0.22);
+}
+
+body.theme-monochrome .card,
+body.theme-monochrome .today-checklist-card,
+body.theme-monochrome .checklist-editor-card {
+    background: linear-gradient(180deg, #1b1b1b, #080808);
+    border-color: rgba(255, 255, 255, 0.32);
+}
+
+body.theme-monochrome .progress-bar,
+body.theme-monochrome .streak-day.complete,
+body.theme-monochrome .check-box {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
 }
 
 body {
     display: flex;
     flex-direction: column;
     margin: 0;
-    color: white;
-    /* background-color: #050505; */
-    background-color: black;
-    /* font-family: 'Mozilla Text', sans-serif; */
+    color: var(--text);
+    background:
+        radial-gradient(circle at top left, color-mix(in srgb, var(--accent), transparent 80%), transparent 24%),
+        radial-gradient(circle at bottom right, color-mix(in srgb, var(--accent), transparent 88%), transparent 28%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
     min-height: 100vh;
+}
+
+.theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.theme-btn {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    font: inherit;
+    padding: 0.38rem 0.62rem;
+    transition: all 0.2s ease;
+}
+
+.theme-btn.active,
+.theme-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-strong);
+    color: var(--accent-strong);
 }
 
 a {
@@ -23,18 +137,16 @@ a {
 
 nav {
     width: 100%;
-    padding: 0.4rem 5%;
-    background-color: #2e2e2f78;
-    border-bottom: 1px solid rgba(44, 44, 44, 0.5);
+    padding: 0.5rem 5%;
+    background: rgba(10, 15, 16, 0.9);
+    border-bottom: 1px solid var(--card-border);
     backdrop-filter: blur(15px);
-    /* margin-bottom: 2rem; */
-    /* border-bottom:1px solid rgba(255, 255, 255, 0.05) ; */
-
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: sticky;
     max-height: 3.3rem;
+    box-shadow: none;
 }
 
 .logo_img {
@@ -101,18 +213,18 @@ nav {
 }
 
 .hero img {
-    display: block;
+    border-radius: 50% !important;
     border-radius: 12px;
     width: min(90vw, 600px);
     height: auto;
     max-height: 90vh;
-    object-fit: cover;
+    border-radius: 999px !important;
 }
 
 .dash-cnt {
     display: grid;
     grid-template-columns: minmax(220px, 1fr) minmax(280px, 640px) minmax(220px, 1fr);
-    align-items: center;
+    border-radius: 999px !important;
     justify-items: center;
     width: min(100%, 1500px);
     margin: 0 auto;
@@ -434,6 +546,23 @@ aside {
     width: 220px;
 }
 
+.sidebar-streak-card {
+    display: none;
+    width: 204px;
+    min-width: 204px;
+    margin: 1rem 8px;
+    padding: 0.8rem;
+    transform: translateX(-12px);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#sidebar:hover .sidebar-streak-card {
+    display: flex;
+    transform: translateX(0);
+    opacity: 1;
+}
+
 #sidebar ul {
     list-style: none;
 }
@@ -550,27 +679,164 @@ aside {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    /* stretch so all cards match the tallest (greeting) card */
-    align-items: stretch;
+    align-items: flex-start;
     justify-content: flex-start;
 }
 
 .card {
-    /* make cards column flex containers so they can stretch to equal height */
     display: flex;
     flex-direction: column;
-    /* size-to-content: fixed to content width instead of growing horizontally */
     flex: 0 0 auto;
     box-sizing: border-box;
-    padding: 1rem;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0.008));
-    border: 1px solid rgba(255, 255, 255, 0.539);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    padding: 0.75rem;
+    background: linear-gradient(180deg, var(--panel), var(--panel-alt));
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
     width: auto;
 }
 
-/* Keep the welcome/greeting card stable when quotes change length */
+[hidden] {
+    display: none !important;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.cards-container {
+    scroll-behavior: smooth;
+}
+
+.body-metrics-card {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+    max-width: none;
+    flex: 1 1 520px;
+    min-width: 280px;
+    padding: 0.65rem 0.8rem;
+}
+
+.body-metric {
+    flex: 1 1 0;
+    min-width: 145px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    column-gap: 0.45rem;
+    min-width: 0;
+    padding: 0.3rem 0.8rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.body-metric:last-child {
+    border-right: 0;
+}
+
+.body-metric-icon {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-size: 1.05rem;
+}
+
+.body-metric-label {
+    color: #bdbdbd;
+    font-size: 0.8rem;
+}
+
+.body-metric strong {
+    grid-column: 2;
+    color: #f4f4f4;
+    font-size: 1.45rem;
+    line-height: 1.1;
+}
+
+.body-metric small {
+    align-self: end;
+    color: #c8c8c8;
+    font-size: 0.8rem;
+}
+
+#metric-bmi-status {
+    grid-column: 2 / span 2;
+    color: #70ff72;
+}
+
+.workout-page-view {
+    padding: 2rem clamp(1rem, 3vw, 3rem) 4rem;
+    animation: workout-page-in 0.25s ease both;
+}
+
+@keyframes workout-page-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.workout-page-heading {
+    margin-bottom: 1.5rem;
+}
+
+.workout-page-heading h1 {
+    margin: 0.25rem 0 0.4rem;
+    color: var(--accent-strong);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.workout-page-heading .muted {
+    color: #a8a8a8;
+}
+
+.back-link {
+    display: block;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--accent-strong);
+    font: inherit;
+    cursor: pointer;
+}
+
+.workout-page-content {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.8fr) minmax(280px, 1.2fr);
+    gap: 1rem;
+    max-width: 900px;
+}
+
+.workout-summary-card,
+.workout-page-list {
+    width: auto;
+    min-width: 0;
+}
+
+.workout-page-list h2 {
+    margin-bottom: 0.5rem;
+}
+
 #greeting-card {
     min-width: 500px;
 }
@@ -580,12 +846,638 @@ aside {
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7)
 }
 
-/* Grouped trackers card (contains multiple .tracker items) */
+.weight-chart-card {
+    flex: 1 1 520px;
+    min-width: 280px;
+    max-width: none;
+    padding: 0.75rem 0.9rem 0.65rem;
+    align-self: flex-start;
+}
+
+.chart-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.chart-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.chart-title-wrap h2 {
+    font-size: 1.1rem;
+}
+
+.chart-icon {
+    color: var(--accent-strong);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.chart-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+.chart-filter select {
+    padding: 0.4rem 1.8rem 0.4rem 0.65rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: #0e0e0e;
+    color: #eee;
+    font: inherit;
+}
+
+.weight-chart-wrap {
+    position: relative;
+    height: 175px;
+    margin-top: 0.45rem;
+}
+
+.weight-entry-form {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weight-entry-form > label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #bdbdbd;
+    font-size: 0.82rem;
+}
+
+.weight-entry-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.weight-entry-controls input {
+    width: 7rem;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #0e0e0e;
+    color: #fff;
+}
+
+.weight-entry-controls span {
+    color: #aaa;
+    font-size: 0.85rem;
+}
+
+.weight-entry-controls button {
+    margin-left: auto;
+    padding: 0.48rem 0.8rem;
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    cursor: pointer;
+    font: inherit;
+}
+
+.weight-entry-status {
+    min-height: 1.1rem;
+    margin-top: 0.35rem;
+    color: var(--accent-strong);
+    font-size: 0.78rem;
+}
+
+.streak-card {
+    flex: 0 1 260px;
+    min-width: 240px;
+    padding: 0.8rem;
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+#sidebar .sidebar-streak-card {
+    width: 204px;
+    min-width: 204px;
+}
+
+.streak-card-topline {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.streak-flame {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: rgba(255, 153, 51, 0.1);
+    font-size: 1.5rem;
+}
+
+.streak-card h2 {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.streak-card-topline p {
+    color: #70ff72;
+    font-size: 1rem;
+}
+
+.streak-card-topline p strong {
+    font-size: 1.7rem;
+}
+
+.streak-message {
+    margin: 0.75rem 0 0.9rem 3.2rem;
+    color: #c4c4c4;
+    font-size: 0.85rem;
+}
+
+.streak-week {
+    margin-left: 0.25rem;
+}
+
+.streak-days,
+.streak-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.35rem;
+    text-align: center;
+}
+
+.streak-day {
+    display: grid;
+    place-items: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    justify-self: center;
+    border: 2px solid #777;
+    border-radius: 50%;
+    color: #111;
+    font-size: 0.7rem;
+}
+
+.streak-day.complete {
+    border-color: #70ff72;
+    background: #70ff72;
+    color: #071107;
+    font-weight: 700;
+}
+
+.streak-labels {
+    margin-top: 0.35rem;
+    color: #aaa;
+    font-size: 0.7rem;
+}
+
+.today-checklist-card {
+    flex: 0 0 360px;
+    width: 360px;
+    max-width: 100%;
+    min-width: 280px;
+    padding: 1rem 1rem 0.6rem;
+    background: linear-gradient(180deg, var(--panel), var(--panel-alt));
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42);
+    align-self: flex-end;
+}
+
+.today-checklist-card h2 {
+    color: var(--text);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.today-checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.2rem;
+}
+
+.today-checklist-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.45rem 0.1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text);
+}
+
+.today-checklist-item:last-child {
+    border-bottom: none;
+}
+
+.check-toggle,
+.checklist-toggle {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin: 0;
+}
+
+.check-toggle input,
+.checklist-toggle input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.check-box {
+    display: inline-grid;
+    place-items: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    font-size: 0.74rem;
+    line-height: 1;
+    font-weight: 700;
+    color: transparent;
+    background: transparent;
+    transition: all 0.15s ease;
+}
+
+.today-checklist-item.checked .check-box,
+.checklist-editor-item:has(input[type="checkbox"]:checked) .check-box {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+    color: var(--bg-1);
+}
+
+.check-label {
+    font-size: 0.95rem;
+    color: var(--text);
+}
+
+.check-value {
+    font-size: 0.82rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.today-checklist-item.checked .check-label,
+.today-checklist-item.checked .check-value {
+    color: var(--accent);
+}
+
+.empty-checklist-state {
+    list-style: none;
+    display: grid;
+    gap: 0.8rem;
+    padding: 0.5rem 0 0.25rem;
+    text-align: center;
+}
+
+.empty-checklist-state p {
+    margin: 0;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.create-checklist-btn {
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    padding: 0.7rem 1rem;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.empty-checklist-editor {
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+    padding: 1rem;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--muted);
+}
+
+.empty-checklist-editor p {
+    margin: 0;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.checklist-editor-card {
+    width: min(100%, 820px);
+    max-width: 100%;
+    margin-top: 2rem;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--panel), var(--panel-alt));
+    border-color: var(--card-border);
+}
+
+.checklist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.checklist-editor-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.checklist-editor-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1.4fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    background: var(--panel-soft, rgba(255, 255, 255, 0.02));
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.checklist-toggle {
+    display: inline-grid;
+    place-items: center;
+    position: relative;
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.checklist-toggle input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checklist-field {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text);
+    padding: 0.55rem 0.65rem;
+    font: inherit;
+    box-sizing: border-box;
+}
+
+.checklist-delete-btn,
+.secondary-btn {
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    padding: 0.5rem 0.9rem;
+    font: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: inset 0 0 0 1px rgba(126, 247, 161, 0.14);
+}
+
+@media (max-width: 640px) {
+    .checklist-editor-item {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas:
+            "check label"
+            "check value"
+            "delete delete";
+    }
+
+    .checklist-toggle {
+        grid-area: check;
+    }
+
+    .checklist-label {
+        grid-area: label;
+    }
+
+    .checklist-value {
+        grid-area: value;
+    }
+
+    .checklist-delete-btn {
+        grid-area: delete;
+        justify-self: end;
+        width: max-content;
+    }
+
+    .secondary-btn {
+        width: 100%;
+    }
+}
+
+.workout-card {
+    flex: 1 1 320px;
+    width: auto;
+    min-width: 320px;
+    padding: 0.75rem;
+    align-self: flex-start;
+    border-color: var(--card-border);
+}
+
+.workout-card-header,
+.workout-progress-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.eyebrow {
+    color: #a1a1a1;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.workout-card h2 {
+    color: var(--accent-strong);
+    font-size: 1.65rem;
+    margin-top: 0.15rem;
+}
+
+.workout-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--card-border);
+    border-radius: 50%;
+    color: var(--accent-strong);
+    font-size: 1.45rem;
+}
+
+.workout-progress-row {
+    color: #cfcfcf;
+    font-size: 0.86rem;
+    margin-top: 0.7rem;
+}
+
+#workout-progress-percent {
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+.workout-progress {
+    height: 7px;
+    margin: 0.45rem 0 0.85rem;
+}
+
+.workout-checklist {
+    display: grid;
+    gap: 0.35rem;
+    list-style: none;
+}
+
+.workout-checklist label {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.35rem 0.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+}
+
+.workout-checklist input {
+    width: 1.15rem;
+    height: 1.15rem;
+    accent-color: var(--accent-strong);
+    cursor: pointer;
+}
+
+.workout-checklist label span {
+    display: grid;
+    gap: 0.1rem;
+}
+
+.workout-checklist strong {
+    font-size: 0.95rem;
+}
+
+.workout-checklist small {
+    color: #a8a8a8;
+    font-size: 0.82rem;
+}
+
+.workout-checklist input:checked + span {
+    color: var(--accent-strong);
+    text-decoration: line-through;
+    text-decoration-color: var(--accent-strong);
+}
+
+.workout-card-link {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    color: var(--accent-strong);
+    font-weight: 700;
+}
+
+.workout-card-link span {
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.workouts-main {
+    flex: 1;
+    width: min(100%, 1100px);
+    margin: 0 auto;
+    padding: 3rem 2rem 4rem;
+}
+
+.workouts-heading {
+    margin-bottom: 2rem;
+}
+
+.workouts-heading h1 {
+    margin: 0.2rem 0 0.45rem;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.workouts-heading .muted {
+    color: #a8a8a8;
+}
+
+.workout-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.workout-list-card {
+    display: flex;
+    min-height: 175px;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.workout-list-card h2 {
+    margin: 0.3rem 0;
+    font-size: 1.4rem;
+}
+
+.workout-list-card p:not(.eyebrow) {
+    color: #a8a8a8;
+    font-size: 0.9rem;
+}
+
+.active-workout {
+    border-color: rgba(112, 255, 114, 0.55);
+    box-shadow: inset 0 2px #70ff72;
+}
+
+.workout-status {
+    align-self: flex-start;
+    color: #888;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.workout-detail {
+    width: min(100%, 560px);
+    margin-top: 2rem;
+}
+
+#detail-progress-percent {
+    color: #70ff72;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
 .trackers-card {
-    /* allow trackers card to sit beside the greeting card
-       - flex-basis gives a reasonable starting width
-       - min-width prevents it from collapsing too small
-       - max-width avoids overflowing the row when greeting is present */
     flex: 1 1 320px;
     min-width: 260px;
     max-width: calc(100% - 520px);
@@ -602,20 +1494,19 @@ aside {
 .trackers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 0.8rem;
-    padding: 0.8rem;
+    gap: 0.6rem;
+    padding: 0.6rem;
 }
 
 .tracker {
-    /* visual card inside the trackers group */
     background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
     border: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 0.9rem;
+    padding: 0.65rem;
     border-radius: 8px;
     display: flex;
     gap: 0.6rem;
     align-items: flex-start;
-    min-height: 72px;
+    min-height: 60px;
 }
 
 .tracker-icon {
@@ -699,6 +1590,38 @@ aside {
     .trackers-grid {
         grid-template-columns: 1fr 1fr
     }
+
+    .workout-card {
+        min-width: 0;
+    }
+
+    .weight-chart-card {
+        flex-basis: 100%;
+    }
+
+    .body-metrics-card {
+        flex-wrap: wrap;
+    }
+
+    .body-metric {
+        flex-basis: 140px;
+    }
+
+    .body-metric:last-child {
+        border-right: 0;
+    }
+
+    .workouts-main {
+        padding: 2rem 1rem 3rem;
+    }
+
+    .workout-list {
+        grid-template-columns: 1fr;
+    }
+
+    .workout-page-content {
+        grid-template-columns: 1fr;
+    }
 }
 
 main {
@@ -724,4 +1647,198 @@ main {
 .dashboard-page .nav-links #username {
     display: block;
     margin-left: auto;
+}
+
+.settings-page-view {
+    padding: 2rem clamp(1rem, 3vw, 3rem) 4rem;
+}
+
+.settings-page-heading {
+    margin-bottom: 1.5rem;
+}
+
+.settings-page-heading h1 {
+    margin: 0.2rem 0 0.45rem;
+    color: var(--accent-strong);
+    font-size: clamp(2rem, 5vw, 3.4rem);
+}
+
+.settings-page-heading .muted {
+    color: var(--muted);
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+}
+
+.settings-card {
+    min-width: 0;
+    width: auto;
+}
+
+.settings-card-heading {
+    margin-bottom: 1rem;
+}
+
+.settings-card-heading h2 {
+    margin-top: 0.2rem;
+}
+
+.settings-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.settings-form label {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.settings-form input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.65rem 0.7rem;
+    border: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.28);
+    color: var(--text);
+}
+
+.settings-save-btn {
+    justify-self: start;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--card-border);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+}
+
+.settings-status {
+    min-height: 1.1rem;
+    margin: 0;
+    color: var(--accent-strong);
+    font-size: 0.8rem;
+}
+
+.settings-status.error {
+    color: #ff8d8d;
+}
+
+.settings-theme-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.appearance-card {
+    grid-column: 1 / -1;
+}
+
+body.theme-electric .card h2,
+body.theme-electric .chart-icon,
+body.theme-electric .back-link,
+body.theme-electric .workout-card h2,
+body.theme-electric .workout-card-link,
+body.theme-electric #workout-progress-percent,
+body.theme-electric .weight-entry-status,
+body.theme-electric .streak-card-topline p,
+body.theme-electric #metric-bmi-status,
+body.theme-electric .settings-page-heading h1,
+body.theme-electric .settings-save-btn,
+body.theme-electric .settings-status,
+body.theme-electric .create-checklist-btn,
+body.theme-electric .checklist-delete-btn,
+body.theme-electric .secondary-btn,
+body.theme-electric .body-metric-icon,
+body.theme-electric #sidebar li.active a,
+body.theme-electric #sidebar li.active svg,
+body.theme-electric .workout-checklist input:checked + span {
+    color: var(--accent-strong) !important;
+}
+
+body.theme-electric .progress-bar,
+body.theme-electric .streak-day.complete,
+body.theme-electric .today-checklist-item.checked .check-box,
+body.theme-electric .checklist-editor-item:has(input[type="checkbox"]:checked) .check-box {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+}
+
+body.theme-electric .workout-card,
+body.theme-electric .active-workout {
+    border-color: var(--card-border);
+}
+
+body.theme-electric #sidebar li.active svg {
+    fill: var(--accent-strong) !important;
+}
+
+body.theme-electric .workout-checklist input,
+body.theme-electric .check-box {
+    accent-color: var(--accent-strong);
+}
+
+.dashboard-page .card,
+.dashboard-page .tracker,
+.dashboard-page .workout-list-card {
+    background: linear-gradient(180deg, #1a1a1a, #0b0b0b);
+}
+
+.dashboard-page.card-theme .card,
+.dashboard-page.card-theme .tracker,
+.dashboard-page.card-theme .workout-list-card {
+    background: linear-gradient(180deg, var(--panel), var(--panel-alt));
+}
+
+.card-theme-toggle {
+    display: flex !important;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    color: var(--text) !important;
+    cursor: pointer;
+    font-size: 0.9rem !important;
+}
+
+.card-theme-toggle input {
+    width: 1rem !important;
+    height: 1rem;
+    accent-color: var(--accent-strong);
+}
+
+.dashboard-page #sidebar {
+    background: #111111;
+    border-right: 1px solid #2b2b2b;
+}
+
+.dashboard-page #sidebar li.active a {
+    color: rgba(0, 255, 136, 0.8) !important;
+}
+
+.dashboard-page #sidebar li.active svg {
+    fill: rgba(0, 255, 136, 0.8) !important;
+}
+
+.dashboard-page nav {
+    border-bottom: 0;
+}
+
+.dashboard-page main {
+    border-top: 0;
+}
+
+@media (max-width: 700px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .appearance-card {
+        grid-column: auto;
+    }
 }
