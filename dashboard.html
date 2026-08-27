@@ -2,30 +2,38 @@
 <html>
     <head>
         <title>Fitness Tracker</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="style.css">
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mozilla+Text:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">    
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     </head>
     
     <body class="dashboard-page">
         <nav class="navbar">
             <div class="logo"><a href="index.html"><img src="assets/logo.png" class="logo_img" alt="FT26"></a></div>
+            <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation menu">
+                <span></span><span></span><span></span>
+            </button>
             <ul class="nav-links">
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="#workouts" data-section-link="workouts">Workouts</a></li>
-                <li><a href="#">Records</a></li>
+                <li><a href="#nutrition" data-section-link="nutrition">Nutrition</a></li>
+                <li><a href="#records" data-section-link="records">Records</a></li>
                 <li><div id="username">Loading...</div></li>
             </ul>
             <div class="btns">
-                <span id="profile-name" class="profile-name">User</span>
+                <button type="button" class="profile-chip" id="profile-settings-link" aria-label="Open profile settings">
+                    <span id="profile-avatar" class="profile-avatar" aria-hidden="true">U</span>
+                    <span id="profile-name" class="profile-name">User</span>
+                    <span class="profile-chip-caret" aria-hidden="true">&#9662;</span>
+                </button>
                 <input id="logout-btn" class="btn" type="button" value="LOG OUT" />
             </div>
         </nav>
+        <div id="offline-indicator" class="offline-indicator" role="status" aria-live="polite" hidden>You are offline. Changes may not be saved.</div>
+        <div id="sidebar-overlay" class="sidebar-overlay" hidden></div>
         <div class="dashboard-cnt">
             <aside id="sidebar">
                 <ul>
@@ -42,19 +50,19 @@
                         </a>
                     </li>
                     <li data-section="nutrition">
-                        <a href="#">
+                        <a href="#nutrition">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-200h60v-270q26-8 43-28.5t17-49.5v-152q0-8-6-14t-14-6q-8 0-14 6t-6 14v100h-30v-100q0-8-6-14t-14-6q-8 0-14 6t-6 14v100h-30v-100q0-8-6-14t-14-6q-8 0-14 6t-6 14v152q0 29 17 49.5t43 28.5v270Zm240 0h60v-254q33-16 51.5-51t18.5-82q0-57-28.5-95T590-720q-43 0-71.5 38T490-587q0 47 18.5 82t51.5 51v254ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v640q0 33-23.5 56.5T800-80H160Zm0-80h640v-640H160v640Zm0 0v-640 640Z"/></svg>
                             <span>Nutrition</span>
                         </a>
                     </li>
                     <li data-section="progress">
-                        <a href="#">
+                        <a href="#records">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M80-120v-80h800v80H80Zm40-120v-280h120v280H120Zm200 0v-480h120v480H320Zm200 0v-360h120v360H520Zm200 0v-600h120v600H720Z"/></svg>
                             <span>Progress</span>
                         </a>
                     </li>
                     <li data-section="records">
-                        <a href="#">
+                        <a href="#records">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm285 93q35-35 35-85v-240H360v240q0 50 35 85t85 35q50 0 85-35Zm115-93q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z"/></svg>
                             <span>Records</span>
                         </a>
@@ -186,13 +194,7 @@
                         <div class="progress workout-progress" role="progressbar" aria-label="Today's workout progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                             <div class="progress-bar" id="workout-progress-bar"></div>
                         </div>
-                        <ul class="workout-checklist" id="workout-checklist">
-                            <li><label><input type="checkbox" data-workout-index="0"><span><strong>Chest</strong><small>Bench Press</small></span></label></li>
-                            <li><label><input type="checkbox" data-workout-index="1"><span><strong>Shoulders</strong><small>Overhead Press</small></span></label></li>
-                            <li><label><input type="checkbox" data-workout-index="2"><span><strong>Triceps</strong><small>Pushdowns</small></span></label></li>
-                            <li><label><input type="checkbox" data-workout-index="3"><span><strong>Chest</strong><small>Incline Dumbbell Press</small></span></label></li>
-                            <li><label><input type="checkbox" data-workout-index="4"><span><strong>Core</strong><small>Plank</small></span></label></li>
-                        </ul>
+                        <ul class="workout-checklist" id="workout-checklist"></ul>
                         <a class="workout-card-link" href="#workouts" data-section-link="workouts">Open workout details <span aria-hidden="true">&#8594;</span></a>
                     </section>
                     
@@ -221,38 +223,150 @@
                         <ul id="today-checklist-list" class="today-checklist" aria-live="polite"></ul>
                     </section>
                 </section>
+
+                <section id="nutrition-page" class="nutrition-page-view" aria-labelledby="nutrition-page-title" hidden>
+                    <div class="nutrition-page-heading">
+                        <p class="eyebrow">Fuel your training</p>
+                        <h1 id="nutrition-page-title">Nutrition</h1>
+                        <p class="muted">Log meals, track your macros, and keep today's intake aligned with your targets.</p>
+                    </div>
+                    <div class="nutrition-grid">
+                        <section class="card nutrition-summary-card" aria-labelledby="nutrition-summary-title">
+                            <div class="nutrition-card-heading"><div><p class="eyebrow">Today</p><h2 id="nutrition-summary-title">Daily summary</h2></div><strong id="nutrition-calorie-total" class="nutrition-calorie-total">0 kcal</strong></div>
+                            <div class="nutrition-calorie-progress" role="progressbar" aria-label="Calories consumed today" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="nutrition-calorie-bar" class="progress-bar"></div></div>
+                            <p id="nutrition-calorie-status" class="nutrition-status">0 of 2,000 kcal</p>
+                            <div class="macro-summary" aria-label="Today's macronutrients">
+                                <div><span>Protein</span><strong id="nutrition-protein-total">0 g</strong><small id="nutrition-protein-target">of 150 g</small><div class="macro-bar"><span id="nutrition-protein-bar"></span></div></div>
+                                <div><span>Carbs</span><strong id="nutrition-carbs-total">0 g</strong><small id="nutrition-carbs-target">of 250 g</small><div class="macro-bar"><span id="nutrition-carbs-bar"></span></div></div>
+                                <div><span>Fat</span><strong id="nutrition-fat-total">0 g</strong><small id="nutrition-fat-target">of 70 g</small><div class="macro-bar"><span id="nutrition-fat-bar"></span></div></div>
+                            </div>
+                        </section>
+                        <section class="card nutrition-entry-card" aria-labelledby="nutrition-entry-title">
+                            <div class="nutrition-card-heading"><div><p class="eyebrow">Add food</p><h2 id="nutrition-entry-title">Log a meal</h2></div></div>
+                            <form id="meal-entry-form" class="nutrition-form"><label>Meal<input id="meal-name" type="text" placeholder="Breakfast" required></label><label>Food or drink<input id="meal-food" type="text" placeholder="Greek yogurt" required></label><div class="nutrition-number-grid"><label>Calories<input id="meal-calories" type="number" min="0" max="10000" required></label><label>Protein (g)<input id="meal-protein" type="number" min="0" max="1000" step="0.1" value="0"></label><label>Carbs (g)<input id="meal-carbs" type="number" min="0" max="1000" step="0.1" value="0"></label><label>Fat (g)<input id="meal-fat" type="number" min="0" max="1000" step="0.1" value="0"></label></div><button class="settings-save-btn" type="submit">Add meal</button><p id="meal-entry-status" class="settings-status" role="status" aria-live="polite"></p></form>
+                        </section>
+                        <section class="card nutrition-target-card" aria-labelledby="nutrition-target-title">
+                            <div class="nutrition-card-heading"><div><p class="eyebrow">Personal targets</p><h2 id="nutrition-target-title">Daily goals</h2></div></div>
+                            <form id="nutrition-target-form" class="nutrition-form"><div class="nutrition-number-grid"><label>Calories<input id="nutrition-target-calories" type="number" min="500" max="10000" required></label><label>Protein (g)<input id="nutrition-target-protein" type="number" min="0" max="1000" required></label><label>Carbs (g)<input id="nutrition-target-carbs" type="number" min="0" max="1000" required></label><label>Fat (g)<input id="nutrition-target-fat" type="number" min="0" max="1000" required></label><label>Water (L)<input id="nutrition-target-water" type="number" min="0.5" max="20" step="0.1" required></label></div><button class="settings-save-btn" type="submit">Save targets</button><p id="nutrition-target-status" class="settings-status" role="status" aria-live="polite"></p></form>
+                        </section>
+                        <section class="card hydration-card" aria-labelledby="hydration-title">
+                            <div class="nutrition-card-heading"><div><p class="eyebrow">Hydration</p><h2 id="hydration-title">Water today</h2></div><strong id="nutrition-water-total" class="nutrition-calorie-total">0 L</strong></div>
+                            <div class="nutrition-calorie-progress" role="progressbar" aria-label="Water consumed today" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="nutrition-water-bar" class="progress-bar"></div></div>
+                            <p id="nutrition-water-status" class="nutrition-status">0 of 4.5 L</p>
+                            <form id="water-entry-form" class="nutrition-form"><label>Add water (L)<input id="water-entry" type="number" min="0.05" max="10" step="0.05" placeholder="0.25" required></label><button class="settings-save-btn" type="submit">Add water</button><p id="water-entry-status" class="settings-status" role="status" aria-live="polite"></p></form>
+                        </section>
+                        <section class="card nutrition-history-card" aria-labelledby="nutrition-history-title"><div class="nutrition-card-heading"><div><p class="eyebrow">Your record</p><h2 id="nutrition-history-title">Meal history</h2></div></div><ul id="meal-history-list" class="meal-history-list" aria-live="polite"></ul></section>
+                        <section class="card nutrition-chart-card" aria-labelledby="nutrition-chart-title"><div class="nutrition-card-heading"><div><p class="eyebrow">Last seven days</p><h2 id="nutrition-chart-title">Calorie trend</h2></div></div><div id="nutrition-week-chart" class="nutrition-week-chart" aria-label="Calories logged during the last seven days"></div></section>
+                        <section class="card nutrition-search-card" aria-labelledby="nutrition-search-title"><div class="nutrition-card-heading"><div><p class="eyebrow">Food lookup</p><h2 id="nutrition-search-title">Barcode search</h2></div></div><form id="barcode-search-form" class="nutrition-form nutrition-search-form"><label>Barcode<input id="food-barcode" inputmode="numeric" pattern="[0-9 ]+" placeholder="Scan or enter a barcode" required></label><button class="secondary-btn" type="submit">Look up food</button><p id="barcode-search-status" class="settings-status" role="status" aria-live="polite"></p></form><p class="muted small barcode-attribution">Barcode results use the Open Food Facts API. Product information may be incomplete or user-submitted.</p><div id="barcode-result" class="barcode-result" hidden></div></section>
+                    </div>
+                </section>
+
+                <section id="progress-page" class="records-page-view" aria-labelledby="progress-page-title" hidden>
+                    <div class="records-page-heading">
+                        <p class="eyebrow">Your trends</p>
+                        <h1 id="progress-page-title">Progress</h1>
+                        <p class="muted">Review your training volume, cardio distance, and activity over time.</p>
+                    </div>
+                    <section class="card records-summary-card progress-summary-card" aria-labelledby="progress-summary-title">
+                        <div class="records-card-heading"><div><p class="eyebrow">Overview</p><h2 id="progress-summary-title">Progress summary</h2></div><select id="records-period" aria-label="Progress summary period"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="365">Last year</option></select></div>
+                        <div class="records-stat-grid"><div><strong id="records-workout-count">0</strong><span>workouts</span></div><div><strong id="records-volume-total">0 kg</strong><span>lift volume</span></div><div><strong id="records-cardio-distance">0 km</strong><span>cardio distance</span></div><div><strong id="records-measurement-count">0</strong><span>measurements</span></div></div>
+                        <div id="records-progress-chart" class="records-progress-chart" aria-label="Workout progress by day"></div>
+                    </section>
+                </section>
+
+                <section id="records-page" class="records-page-view" aria-labelledby="records-page-title" hidden>
+                    <div class="records-page-heading">
+                        <p class="eyebrow">Your history</p>
+                        <h1 id="records-page-title">Records</h1>
+                        <p class="muted">Save and review your personal bests, cardio sessions, measurements, and progress photo references.</p>
+                    </div>
+                    <div class="records-grid">
+                        <section class="card record-entry-card" aria-labelledby="record-entry-title"><div class="records-card-heading"><div><p class="eyebrow">Strength</p><h2 id="record-entry-title">Log a lift</h2></div></div><form id="record-entry-form" class="records-form"><label>Exercise<input id="record-exercise" type="text" placeholder="Bench Press" required></label><div class="records-number-grid"><label>Weight (kg)<input id="record-weight" type="number" min="0" step="0.5" required></label><label>Reps<input id="record-reps" type="number" min="1" max="100" required></label></div><button class="settings-save-btn" type="submit">Save lift</button><p id="record-entry-status" class="settings-status" role="status" aria-live="polite"></p></form></section>
+                        <section class="card personal-records-card" aria-labelledby="personal-records-title"><div class="records-card-heading"><div><p class="eyebrow">Best lifts</p><h2 id="personal-records-title">Personal records</h2></div></div><ul id="personal-records-list" class="personal-records-list" aria-live="polite"></ul></section>
+                        <section class="card cardio-entry-card" aria-labelledby="cardio-entry-title"><div class="records-card-heading"><div><p class="eyebrow">Cardio</p><h2 id="cardio-entry-title">Log a session</h2></div></div><form id="cardio-entry-form" class="records-form"><label>Activity<input id="cardio-activity" type="text" placeholder="Running" required></label><div class="records-number-grid"><label>Distance (km)<input id="cardio-distance" type="number" min="0" step="0.1" required></label><label>Duration (min)<input id="cardio-duration" type="number" min="0" required></label></div><button class="settings-save-btn" type="submit">Save cardio</button><p id="cardio-entry-status" class="settings-status" role="status" aria-live="polite"></p></form></section>
+                        <section class="card measurement-entry-card" aria-labelledby="measurement-entry-title"><div class="records-card-heading"><div><p class="eyebrow">Body tracking</p><h2 id="measurement-entry-title">Log measurements</h2></div></div><form id="measurement-entry-form" class="records-form"><div class="records-number-grid"><label>Waist (cm)<input id="measurement-waist" type="number" min="0" step="0.1"></label><label>Chest (cm)<input id="measurement-chest" type="number" min="0" step="0.1"></label><label>Arms (cm)<input id="measurement-arms" type="number" min="0" step="0.1"></label><label>Body fat (%)<input id="measurement-body-fat" type="number" min="0" max="100" step="0.1"></label></div><button class="settings-save-btn" type="submit">Save measurements</button><p id="measurement-entry-status" class="settings-status" role="status" aria-live="polite"></p></form></section>
+                        <section class="card progress-photo-card" aria-labelledby="progress-photo-title"><div class="records-card-heading"><div><p class="eyebrow">Visual progress</p><h2 id="progress-photo-title">Progress photo reference</h2></div></div><form id="progress-photo-form" class="records-form"><label>Image URL<input id="progress-photo-url" type="url" placeholder="https://..." required></label><button class="settings-save-btn" type="submit">Save photo reference</button><p id="progress-photo-status" class="settings-status" role="status" aria-live="polite"></p></form><ul id="progress-photo-list" class="progress-photo-list"></ul></section>
+                    </div>
+                    <div class="records-actions"><button type="button" class="secondary-btn" id="export-records">Export my data</button><span id="records-export-status" class="settings-status" role="status" aria-live="polite"></span></div>
+                </section>
                 
                 <section id="workout-page" class="workout-page-view" aria-labelledby="workout-page-title" hidden>
                     <div class="workout-page-heading">
                         <button id="back-to-dashboard" class="back-link" type="button">&#8592; Dashboard</button>
                         <p class="eyebrow">Training session</p>
-                        <h1 id="workout-page-title">Push Day</h1>
-                        <p class="muted">Complete each exercise to finish today's workout.</p>
+                        <h1 id="workout-page-title">Today's Workout</h1>
+                        <p id="workout-page-description" class="muted">Choose a plan for each day, then log the exercises you complete.</p>
                     </div>
                     <div class="workout-page-content">
-                        <div class="card workout-summary-card">
+                        <section class="card workout-planner-card" aria-labelledby="workout-planner-title">
                             <div class="workout-card-header">
-                                <div><p class="eyebrow">Today's Workout</p><h2>Push Day</h2></div>
-                                <span class="workout-icon" aria-hidden="true">&#9878;</span>
+                                <div>
+                                    <p class="eyebrow">Weekly plan</p>
+                                    <h2 id="workout-planner-title">Set a workout day</h2>
+                                </div>
                             </div>
-                            <div class="workout-progress-row">
-                                <span id="page-workout-progress-label">0 / 5 exercises</span>
-                                <span id="page-workout-progress-percent">0%</span>
+                            <form id="workout-plan-form" class="workout-plan-form">
+                                <label>Day
+                                    <select id="workout-plan-day">
+                                        <option value="monday">Monday</option>
+                                        <option value="tuesday">Tuesday</option>
+                                        <option value="wednesday">Wednesday</option>
+                                        <option value="thursday">Thursday</option>
+                                        <option value="friday">Friday</option>
+                                        <option value="saturday">Saturday</option>
+                                        <option value="sunday">Sunday</option>
+                                    </select>
+                                </label>
+                                <label>Workout
+                                    <select id="workout-plan-type">
+                                        <option value="chest-tricep">Chest &amp; Tricep Day</option>
+                                        <option value="leg">Leg Day</option>
+                                        <option value="back-bicep">Back &amp; Bicep Day</option>
+                                        <option value="shoulder">Shoulder Day</option>
+                                        <option value="custom">Create custom plan</option>
+                                        <option value="rest">Rest day</option>
+                                    </select>
+                                </label>
+                                <div id="custom-exercise-controls" class="custom-exercise-controls" hidden>
+                                    <label>Add exercise
+                                        <input id="custom-exercise-name" type="text" placeholder="e.g. Cable fly">
+                                    </label>
+                                    <button type="button" class="secondary-btn" id="add-custom-exercise">Add exercise</button>
+                                </div>
+                                <ul id="custom-exercise-list" class="custom-exercise-list"></ul>
+                                <button class="settings-save-btn" type="submit">Save day plan</button>
+                                <p id="workout-plan-status" class="settings-status" role="status" aria-live="polite"></p>
+                            </form>
+                        </section>
+                        <div class="today-workout-container">
+                            <div class="card workout-summary-card">
+                                <div class="workout-card-header">
+                                    <div><p class="eyebrow">Today's Workout</p><h2 id="today-page-workout-title">Today's Workout</h2></div>
+                                    <span class="workout-icon" aria-hidden="true">&#9878;</span>
+                                </div>
+                                <div class="workout-progress-row">
+                                    <span id="page-workout-progress-label">0 / 0 exercises</span>
+                                    <span id="page-workout-progress-percent">0%</span>
+                                </div>
+                                <div class="progress workout-progress" role="progressbar" aria-label="Workout page progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                    <div class="progress-bar" id="page-workout-progress-bar"></div>
+                                </div>
                             </div>
-                            <div class="progress workout-progress" role="progressbar" aria-label="Workout page progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                                <div class="progress-bar" id="page-workout-progress-bar"></div>
+                            <div class="card workout-page-list">
+                                <h2 id="workout-exercises-title">Today's Exercises</h2>
+                                <ul class="workout-checklist" id="page-workout-checklist"></ul>
                             </div>
                         </div>
-                        <div class="card workout-page-list">
-                            <h2>Exercises</h2>
-                            <ul class="workout-checklist" id="page-workout-checklist">
-                                <li><label><input type="checkbox" data-workout-index="0"><span><strong>Chest</strong><small>Bench Press · 4 sets</small></span></label></li>
-                                <li><label><input type="checkbox" data-workout-index="1"><span><strong>Shoulders</strong><small>Overhead Press · 3 sets</small></span></label></li>
-                                <li><label><input type="checkbox" data-workout-index="2"><span><strong>Triceps</strong><small>Pushdowns · 3 sets</small></span></label></li>
-                                <li><label><input type="checkbox" data-workout-index="3"><span><strong>Chest</strong><small>Incline Dumbbell Press · 3 sets</small></span></label></li>
-                                <li><label><input type="checkbox" data-workout-index="4"><span><strong>Core</strong><small>Plank · 3 rounds</small></span></label></li>
-                            </ul>
-                        </div>
+
+                        <section class="card weekly-workout-card" aria-labelledby="weekly-workout-title">
+                            <div class="workout-card-header">
+                                <div>
+                                    <p class="eyebrow">Weekly schedule</p>
+                                    <h2 id="weekly-workout-title">Workouts by day</h2>
+                                </div>
+                            </div>
+                            <div id="weekly-workout-list" class="weekly-workout-list"></div>
+                        </section>
 
                         <section class="card checklist-editor-card" aria-labelledby="checklist-editor-title">
                             <div class="workout-card-header checklist-header">
@@ -285,6 +399,28 @@
                             <form id="profile-settings-form" class="settings-form">
                                 <label>First name<input id="settings-first-name" type="text" autocomplete="given-name" required></label>
                                 <label>Last name<input id="settings-last-name" type="text" autocomplete="family-name"></label>
+                                <label>Birthdate<input id="settings-birthdate" type="date" autocomplete="bday"></label>
+                                <label>Gender
+                                    <select id="settings-gender">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other / Prefer not to say</option>
+                                    </select>
+                                </label>
+                                <label>Units
+                                    <select id="settings-units">
+                                        <option value="metric">Metric (kg, cm)</option>
+                                        <option value="imperial">Imperial (lb, ft)</option>
+                                    </select>
+                                </label>
+                                <label>Primary goal
+                                    <select id="settings-goal">
+                                        <option value="general-fitness">General fitness</option>
+                                        <option value="build-muscle">Build muscle</option>
+                                        <option value="lose-fat">Lose fat</option>
+                                        <option value="improve-endurance">Improve endurance</option>
+                                    </select>
+                                </label>
                                 <button class="settings-save-btn" type="submit">Save name</button>
                                 <p id="profile-settings-status" class="settings-status" role="status" aria-live="polite"></p>
                             </form>
@@ -312,6 +448,7 @@
                                 </div>
                             </div>
                             <form id="password-settings-form" class="settings-form">
+                                <label>Current password<input id="settings-current-password" type="password" autocomplete="current-password" required></label>
                                 <label>New password<input id="settings-password" type="password" minlength="6" autocomplete="new-password" required></label>
                                 <label>Confirm password<input id="settings-password-confirm" type="password" minlength="6" autocomplete="new-password" required></label>
                                 <button class="settings-save-btn" type="submit">Update password</button>
@@ -350,11 +487,11 @@
             <div class="footer_content">
                 <div class="footer_sec">
                     <h3>Fitness Tracker</h3>
-                    <p>Building better verison of ourselves.</p>
+                    <p>Building a better version of ourselves.</p>
                 </div>
             </div>
             <div class="footer_bottom">
-                &copy; 2026 Fitness Tracker -- Designed & Developed by <a href="https://github.com/Ganesh-Revanth">Ganesh Revanth</a>
+                &copy; <span data-current-year></span> Fitness Tracker -- Designed &amp; Developed by <a href="https://github.com/Ganesh-Revanth">Ganesh Revanth</a>
             </div>
         </footer>
         <script type="module" src="dashboard.js"></script>

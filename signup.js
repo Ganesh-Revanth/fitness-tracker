@@ -3,6 +3,10 @@ import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 import { notify } from "./notifications.js";
 
+document.querySelectorAll('[data-current-year]').forEach((element) => {
+    element.textContent = String(new Date().getFullYear());
+});
+
 const form = document.getElementById("signup-form");
 
 form.addEventListener("submit", async (e) => {

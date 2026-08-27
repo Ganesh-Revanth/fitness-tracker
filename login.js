@@ -2,6 +2,10 @@ import { auth } from "./firebase.js";
 import { signInWithEmailAndPassword, sendEmailVerification, signOut }   from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { notify } from "./notifications.js";
 
+document.querySelectorAll('[data-current-year]').forEach((element) => {
+    element.textContent = String(new Date().getFullYear());
+});
+
 const form = document.getElementById("login-form");
 
 const message = sessionStorage.getItem("notification");
