@@ -2668,6 +2668,89 @@ body.theme-electric .check-box {
     }
 }
 
+@media (max-width: 700px) {
+    .landing-page nav.navabar {
+        min-height: 0;
+        max-height: none;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        padding: 0.55rem 1rem 0.7rem;
+    }
+
+    .landing-page .logo_img {
+        width: 6.5rem;
+        margin-top: 0.2rem;
+    }
+
+    .landing-page .btns {
+        gap: 0.4rem;
+        margin-left: auto;
+    }
+
+    .landing-page .btn {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    .landing-page .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .landing-page .nav-links li a {
+        font-size: 0.85rem;
+    }
+
+    .landing-page .dash-cnt {
+        width: 100%;
+        padding: 2rem 1rem 3rem;
+        gap: 2rem;
+    }
+
+    .landing-page .qoute,
+    .landing-page .promo {
+        width: 100%;
+        max-width: 34rem;
+    }
+
+    .landing-page .qoute {
+        font-size: clamp(1.75rem, 8vw, 2.5rem);
+        line-height: 1.15;
+    }
+
+    .landing-page .hero {
+        width: 100%;
+    }
+
+    .landing-page .hero img {
+        width: min(100%, 34rem);
+        max-height: 42vh;
+        object-fit: contain;
+    }
+
+    .landing-page .promo1 {
+        font-size: clamp(1.55rem, 7vw, 2.2rem);
+        line-height: 1.1;
+    }
+
+    .landing-page .promo2 {
+        font-size: 0.98rem;
+        line-height: 1.55;
+    }
+
+    .landing-page .sign_up2 {
+        width: min(100%, 18rem);
+        margin-top: 1rem;
+        font-size: 1.15rem;
+    }
+
+    .landing-page .footer_content {
+        padding: 1rem;
+    }
+}
+
 .workout-planner-card {
     grid-column: 1 / -1;
     width: min(100%, 900px) !important;
