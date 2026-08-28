@@ -615,6 +615,100 @@ input {
     justify-content: center;
 }
 
+@media (max-width: 640px) {
+    nav {
+        max-height: none;
+        padding: 0.65rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+    }
+
+    .logo_img {
+        width: 6.5rem;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .nav-links li a {
+        font-size: 0.9rem;
+    }
+
+    .btns {
+        gap: 0.45rem;
+        margin-left: auto;
+    }
+
+    .btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.78rem;
+    }
+
+    .login_cnt {
+        align-items: flex-start;
+        width: 100%;
+        margin: 0;
+        padding: 1.5rem 1rem 2.5rem;
+    }
+
+    .login_form {
+        width: 100%;
+        max-width: 28rem;
+        padding: 1.5rem 1rem;
+        font-size: 1rem;
+    }
+
+    .login_form form {
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .input_field {
+        flex: 1 1 100%;
+        flex-direction: column;
+        gap: 0.3rem;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .input_field label {
+        flex: none;
+    }
+
+    .input_field input,
+    .input_field select {
+        width: 100%;
+        min-width: 0;
+        min-height: 2.35rem;
+        padding: 0.35rem 0.45rem;
+    }
+
+    .lgn-options,
+    .signup-btn {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .log_btn {
+        width: 100%;
+        padding: 0.55rem 1rem;
+    }
+
+    .login_footer {
+        text-align: center;
+        line-height: 1.45;
+    }
+
+    .side1,
+    .side2 {
+        display: none;
+    }
+}
+
 .dashboard-cnt {
     flex: 1;
     display: grid;
@@ -1874,8 +1968,9 @@ main {
     margin-bottom: 0.65rem;
     color: var(--accent-strong);
     font-family: 'Outfit', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
     letter-spacing: 0.08em;
 }
 
