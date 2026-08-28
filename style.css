@@ -895,18 +895,6 @@ aside {
 
 .workout-page-view {
     padding: 2rem clamp(1rem, 3vw, 3rem) 4rem;
-    animation: workout-page-in 0.25s ease both;
-}
-
-@keyframes workout-page-in {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .workout-page-heading {
@@ -2021,7 +2009,6 @@ body.theme-electric .check-box {
 
 .nutrition-page-view {
     padding: 2rem clamp(1rem, 3vw, 3rem) 4rem;
-    animation: workout-page-in 0.25s ease both;
 }
 
 .nutrition-page-heading {
@@ -2409,6 +2396,49 @@ body.theme-electric .check-box {
 .dashboard-page .cards-container > .card {
     width: 100%;
     min-width: 0;
+}
+
+.dashboard-page .page-transition-in {
+    animation: dashboard-page-fade-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.dashboard-page .page-transition-in > * {
+    animation: dashboard-content-fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.dashboard-page .page-transition-in > *:nth-child(2) { animation-delay: 0.04s; }
+.dashboard-page .page-transition-in > *:nth-child(3) { animation-delay: 0.08s; }
+.dashboard-page .page-transition-in > *:nth-child(4) { animation-delay: 0.12s; }
+
+@keyframes dashboard-page-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.985);
+        filter: blur(4px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes dashboard-content-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-page .page-transition-in,
+    .dashboard-page .page-transition-in > * {
+        animation: none;
+    }
 }
 
 #greeting-card { grid-column: span 5; min-width: 0; }

@@ -834,6 +834,8 @@ const progressPage = document.getElementById('progress-page');
 const recordsPage = document.getElementById('records-page');
 const aboutFt26Page = document.getElementById('about-ft26-page');
 const dashboardCards = document.querySelector('.cards-container');
+const dashboardViews = [dashboardCards, workoutPage, settingsPage, nutritionPage, progressPage, recordsPage, aboutFt26Page].filter(Boolean);
+let pageTransitionTimer;
 
 document.getElementById('profile-settings-link')?.addEventListener('click', () => {
     setActiveSidebarSection('settings');
@@ -850,6 +852,20 @@ function setActiveSidebarSection(section) {
     const isProgressPage = section === 'progress';
     const isRecordsPage = section === 'records';
     const isAboutFt26Page = section === 'about-ft26';
+    const nextView = section === 'dashboard'
+        ? dashboardCards
+        : section === 'workouts'
+            ? workoutPage
+            : section === 'settings'
+                ? settingsPage
+                : section === 'nutrition'
+                    ? nutritionPage
+                    : section === 'progress'
+                        ? progressPage
+                        : section === 'records'
+                            ? recordsPage
+                            : aboutFt26Page;
+    dashboardViews.forEach((view) => view.classList.remove('page-transition-in'));
     if (workoutPage) workoutPage.hidden = !isWorkoutPage;
     if (settingsPage) settingsPage.hidden = !isSettingsPage;
     if (nutritionPage) nutritionPage.hidden = !isNutritionPage;
@@ -857,6 +873,13 @@ function setActiveSidebarSection(section) {
     if (recordsPage) recordsPage.hidden = !isRecordsPage;
     if (aboutFt26Page) aboutFt26Page.hidden = !isAboutFt26Page;
     if (dashboardCards) dashboardCards.hidden = isWorkoutPage || isSettingsPage || isNutritionPage || isProgressPage || isRecordsPage || isAboutFt26Page;
+    if (pageTransitionTimer) window.clearTimeout(pageTransitionTimer);
+    if (nextView) {
+        window.requestAnimationFrame(() => {
+            nextView.classList.add('page-transition-in');
+            pageTransitionTimer = window.setTimeout(() => nextView.classList.remove('page-transition-in'), 650);
+        });
+    }
     setMobileMenu(false);
 }
 
