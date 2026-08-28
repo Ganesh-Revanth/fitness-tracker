@@ -7,10 +7,16 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mozilla+Text:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     </head>
     
-    <body class="dashboard-page">
+    <body class="dashboard-page app-status-loading">
+        <div id="app-loading-screen" class="app-loading-screen" role="status" aria-live="polite" aria-label="Loading your dashboard">
+            <img class="app-loading-logo" src="assets/logo.png" alt="">
+            <div class="app-loading-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+            <strong>Loading your dashboard</strong>
+            <span class="app-loading-subtitle">Getting your latest activity ready</span>
+        </div>
         <nav class="navbar">
             <div class="logo"><a href="index.html"><img src="assets/logo.png" class="logo_img" alt="FT26"></a></div>
             <button id="mobile-menu-toggle" class="mobile-menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation menu">
@@ -65,6 +71,12 @@
                         <a href="#records">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm285 93q35-35 35-85v-240H360v240q0 50 35 85t85 35q50 0 85-35Zm115-93q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z"/></svg>
                             <span>Records</span>
+                        </a>
+                    </li>
+                    <li data-section="about-ft26">
+                        <a href="#about-ft26">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197.5-197.5Q124-270 92.5-343T61-499q0-83 31.5-156t104-126.5Q269-835 342-866.5T498-898q83 0 156 31.5t126.5 104Q835-690 866.5-617T898-461q0 83-31.5 156t-104 126.5Q690-124 617-92.5T480-61Zm0-80q134 0 225-91t91-225q0-134-91-225t-225-91q-134 0-225 91t-91 225q0 134 91 225t225 91Zm0-316Z"/></svg>
+                            <span>About FT26</span>
                         </a>
                     </li>
                     <li data-section="settings">
@@ -265,12 +277,33 @@
                     <div class="records-page-heading">
                         <p class="eyebrow">Your trends</p>
                         <h1 id="progress-page-title">Progress</h1>
-                        <p class="muted">Review your training volume, cardio distance, and activity over time.</p>
+                        <p class="muted">See how consistently you train and how your body is changing.</p>
                     </div>
-                    <section class="card records-summary-card progress-summary-card" aria-labelledby="progress-summary-title">
-                        <div class="records-card-heading"><div><p class="eyebrow">Overview</p><h2 id="progress-summary-title">Progress summary</h2></div><select id="records-period" aria-label="Progress summary period"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="365">Last year</option></select></div>
-                        <div class="records-stat-grid"><div><strong id="records-workout-count">0</strong><span>workouts</span></div><div><strong id="records-volume-total">0 kg</strong><span>lift volume</span></div><div><strong id="records-cardio-distance">0 km</strong><span>cardio distance</span></div><div><strong id="records-measurement-count">0</strong><span>measurements</span></div></div>
-                        <div id="records-progress-chart" class="records-progress-chart" aria-label="Workout progress by day"></div>
+                    <section class="card progress-overview-card" aria-labelledby="progress-summary-title">
+                        <div class="records-card-heading"><div><p class="eyebrow">Overview</p><h2 id="progress-summary-title">Progress summary</h2></div><label class="progress-period-control">Period<select id="progress-period" aria-label="Progress summary period"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="365">Last year</option></select></label></div>
+                        <div class="records-stat-grid progress-stat-grid">
+                            <div><strong id="progress-workout-count">—</strong><span>workouts completed</span><small id="progress-workout-change"></small></div>
+                            <div><strong id="progress-completion-rate">—</strong><span>completion rate</span><small id="progress-completion-change"></small></div>
+                            <div><strong id="progress-volume-total">—</strong><span>lifting volume</span><small id="progress-volume-change"></small></div>
+                            <div><strong id="progress-cardio-total">—</strong><span>cardio distance</span><small id="progress-cardio-change"></small></div>
+                            <div><strong id="progress-cardio-duration">—</strong><span>cardio duration</span><small id="progress-duration-change"></small></div>
+                            <div><strong id="progress-cardio-pace">—</strong><span>average pace</span><small>minutes per km</small></div>
+                            <div><strong id="progress-streak">—</strong><span>current streak</span><small id="progress-streak-best"></small></div>
+                        </div>
+                        <p id="progress-goal-insight" class="progress-insight"></p>
+                    </section>
+                    <section class="progress-chart-grid" aria-label="Progress charts">
+                        <section class="card progress-chart-card" aria-labelledby="activity-chart-title"><div class="records-card-heading"><div><p class="eyebrow">Consistency</p><h2 id="activity-chart-title">Workout activity</h2></div></div><div class="progress-canvas-wrap"><canvas id="progress-activity-chart"></canvas></div><p id="progress-activity-empty" class="empty-state" hidden></p></section>
+                        <section class="card progress-chart-card" aria-labelledby="weight-chart-title"><div class="records-card-heading"><div><p class="eyebrow">Body weight</p><h2 id="weight-chart-title">Weight trend</h2></div></div><div class="progress-canvas-wrap"><canvas id="progress-weight-chart"></canvas></div><p id="progress-weight-empty" class="empty-state" hidden></p></section>
+                        <section class="card progress-chart-card" aria-labelledby="strength-chart-title"><div class="records-card-heading"><div><p class="eyebrow">Strength</p><h2 id="strength-chart-title">Volume trend</h2></div></div><div class="progress-canvas-wrap"><canvas id="progress-strength-chart"></canvas></div><p id="progress-strength-empty" class="empty-state" hidden></p></section>
+                        <section class="card progress-chart-card" aria-labelledby="cardio-chart-title"><div class="records-card-heading"><div><p class="eyebrow">Endurance</p><h2 id="cardio-chart-title">Cardio trend</h2></div></div><div class="progress-canvas-wrap"><canvas id="progress-cardio-chart"></canvas></div><p id="progress-cardio-empty" class="empty-state" hidden></p></section>
+                    </section>
+                    <section class="progress-detail-grid">
+                        <section class="card progress-comparison-card" aria-labelledby="progress-comparison-title"><div class="records-card-heading"><div><p class="eyebrow">Perspective</p><h2 id="progress-comparison-title">This period vs previous</h2></div></div><div id="progress-comparisons" class="progress-comparisons"></div></section>
+                        <section class="card progress-target-card" aria-labelledby="progress-target-title"><div class="records-card-heading"><div><p class="eyebrow">Weekly targets</p><h2 id="progress-target-title">Set your baseline</h2></div></div><form id="progress-target-form" class="records-form"><div class="records-number-grid"><label>Workouts<input id="progress-target-workouts" type="number" min="0" max="21" required></label><label>Cardio distance (km)<input id="progress-target-distance" type="number" min="0" max="1000" step="0.1" required></label><label>Cardio duration (min)<input id="progress-target-duration" type="number" min="0" max="10000" required></label></div><button class="settings-save-btn" type="submit">Save targets</button><p id="progress-target-status" class="settings-status" role="status" aria-live="polite"></p></form><p id="progress-target-insight" class="muted small"></p></section>
+                        <section class="card progress-measurement-card" aria-labelledby="progress-measurement-title"><div class="records-card-heading"><div><p class="eyebrow">Body tracking</p><h2 id="progress-measurement-title">Measurements over time</h2></div></div><div class="progress-table-wrap"><div id="progress-measurements" class="progress-measurements"></div></div></section>
+                        <section class="card progress-pr-card" aria-labelledby="progress-pr-title"><div class="records-card-heading"><div><p class="eyebrow">Improvement</p><h2 id="progress-pr-title">Personal bests</h2></div></div><div id="progress-prs" class="progress-comparisons"></div></section>
+                        <section class="card progress-photo-card" aria-labelledby="progress-photo-history-title"><div class="records-card-heading"><div><p class="eyebrow">Visual progress</p><h2 id="progress-photo-history-title">Photo timeline</h2></div></div><ul id="progress-photo-history" class="progress-photo-list"></ul></section>
                     </section>
                 </section>
 
@@ -469,6 +502,7 @@
                                 <button type="button" class="theme-btn" data-theme="amber">Amber</button>
                                 <button type="button" class="theme-btn" data-theme="crimson">Crimson</button>
                                 <button type="button" class="theme-btn" data-theme="monochrome">Black &amp; white</button>
+                                <button type="button" class="theme-btn" data-theme="simple">Simple</button>
                             </div>
                             <label class="card-theme-toggle">
                                 <input id="card-theme-toggle" type="checkbox">
@@ -476,7 +510,64 @@
                             </label>
                             <p id="theme-settings-status" class="settings-status">Theme is saved on this device.</p>
                         </section>
+
                     </div>
+                </section>
+
+                <section id="about-ft26-page" class="settings-page-view about-ft26-page" aria-labelledby="about-ft26-page-title" hidden>
+                    <div class="settings-page-heading">
+                        <p class="eyebrow">How it works</p>
+                        <h1 id="about-ft26-page-title">About FT26</h1>
+                        <p class="muted">A quick guide to getting the most from your fitness dashboard.</p>
+                    </div>
+
+                    <section class="card settings-card about-ft26-card" aria-labelledby="about-ft26-title">
+                        <div class="settings-card-heading">
+                            <div>
+                                <p class="eyebrow">Your daily flow</p>
+                                <h2 id="about-ft26-title">Train, track, understand</h2>
+                            </div>
+                        </div>
+                        <div class="ft26-guide-intro">
+                            <p>FT26 keeps your workouts, habits, nutrition, and body trends in one place. Use it daily for quick actions, then use Progress to understand the bigger picture.</p>
+                        </div>
+                        <div class="ft26-guide-grid">
+                            <article>
+                                <span class="ft26-guide-number">01</span>
+                                <h3>Start your day</h3>
+                                <p>Open Dashboard to see today’s workout, checklist, nutrition totals, hydration, streak, and body metrics.</p>
+                            </article>
+                            <article>
+                                <span class="ft26-guide-number">02</span>
+                                <h3>Complete a workout</h3>
+                                <p>Choose a plan in Workouts, complete each exercise, and tick every finished exercise. A fully completed plan counts toward your streak.</p>
+                            </article>
+                            <article>
+                                <span class="ft26-guide-number">03</span>
+                                <h3>Track daily habits</h3>
+                                <p>Your default checklist includes protein at twice your body weight in grams and 7-8 hours of sleep. Edit or add habits from Workouts.</p>
+                            </article>
+                            <article>
+                                <span class="ft26-guide-number">04</span>
+                                <h3>Log your records</h3>
+                                <p>Use Records for individual lifts, cardio sessions, measurements, and dated photo references. Add duration with cardio to unlock pace insights.</p>
+                            </article>
+                            <article>
+                                <span class="ft26-guide-number">05</span>
+                                <h3>Read your progress</h3>
+                                <p>Progress compares 7, 30, 90, or 365 days with the previous period. Review activity, weight, volume, cardio, measurements, streaks, and personal bests.</p>
+                            </article>
+                            <article>
+                                <span class="ft26-guide-number">06</span>
+                                <h3>Make it yours</h3>
+                                <p>Set your primary goal and weekly targets in Settings and Progress. Export your records whenever you need a copy of your data.</p>
+                            </article>
+                        </div>
+                        <div class="ft26-guide-note">
+                            <strong>Data and privacy</strong>
+                            <p>Your account data is stored with your signed-in Firebase account. Weight, workout, nutrition, and record changes sync when you are online; the offline notice tells you when changes may not save.</p>
+                        </div>
+                    </section>
                 </section>
 
                 

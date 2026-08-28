@@ -106,6 +106,21 @@ body {
 .dashboard-page input,
 .dashboard-page button,
 .dashboard-page select {
+    font-family: 'Mozilla Text', sans-serif;
+}
+
+.dashboard-page h1,
+.dashboard-page h2,
+.dashboard-page h3,
+.dashboard-page .logo,
+.dashboard-page .nav-links,
+.dashboard-page .sidebar-nav,
+.dashboard-page .tracker-value,
+.dashboard-page .records-stat-grid strong,
+.dashboard-page .progress-comparisons strong,
+.dashboard-page button,
+.dashboard-page select,
+.dashboard-page input {
     font-family: 'Outfit', sans-serif;
 }
 
@@ -1839,6 +1854,68 @@ main {
     grid-column: 1 / -1;
 }
 
+.about-ft26-card {
+    grid-column: 1 / -1;
+}
+
+.ft26-guide-intro {
+    max-width: 50rem;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.ft26-guide-intro p,
+.ft26-guide-note p {
+    margin: 0;
+}
+
+.ft26-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.ft26-guide-grid article {
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.ft26-guide-number {
+    display: block;
+    margin-bottom: 0.65rem;
+    color: var(--accent-strong);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.ft26-guide-grid h3 {
+    margin-bottom: 0.4rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+}
+
+.ft26-guide-grid p,
+.ft26-guide-note p {
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.55;
+}
+
+.ft26-guide-note {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+}
+
+.ft26-guide-note strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-family: 'Outfit', sans-serif;
+}
+
 body.theme-electric .card h2,
 body.theme-electric .chart-icon,
 body.theme-electric .back-link,
@@ -2392,15 +2469,83 @@ body.theme-electric .check-box {
 
 .app-status-loading {
     color: var(--muted);
-    opacity: 0.75;
 }
 
-.dashboard-page.app-status-loading .cards-container::before {
-    content: "Loading your dashboard…";
-    grid-column: 1 / -1;
+.dashboard-page.app-status-loading > *:not(#app-loading-screen) {
+    visibility: hidden;
+}
+
+.app-loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.75rem;
+    background: radial-gradient(circle at 50% 35%, var(--panel) 0%, var(--bg-1) 62%);
+    color: var(--text);
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.dashboard-page:not(.app-status-loading) .app-loading-screen {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.app-loading-screen strong {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+}
+
+.app-loading-logo {
+    display: block;
+    width: min(72vw, 22rem);
+    height: auto;
+    filter: drop-shadow(0 0 1.2rem rgba(126, 247, 161, 0.12));
+    animation: app-loading-logo-reveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.app-loading-subtitle {
     color: var(--muted);
-    font-size: 0.85rem;
-    padding: 0.25rem;
+    font-size: 0.8rem;
+}
+
+.app-loading-mark {
+    display: flex;
+    align-items: end;
+    gap: 0.35rem;
+    height: 2rem;
+}
+
+.app-loading-mark span {
+    display: block;
+    width: 0.35rem;
+    height: 0.8rem;
+    background: var(--accent-strong);
+    animation: app-loading-pulse 0.9s ease-in-out infinite;
+}
+
+.app-loading-mark span:nth-child(2) { animation-delay: 0.15s; }
+.app-loading-mark span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes app-loading-pulse {
+    0%, 100% { height: 0.8rem; opacity: 0.45; }
+    50% { height: 2rem; opacity: 1; }
+}
+
+@keyframes app-loading-logo-reveal {
+    from { opacity: 0; transform: translateY(0.75rem) scale(0.94); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-loading-logo,
+    .app-loading-mark span {
+        animation: none;
+    }
 }
 
 .empty-state { color: var(--muted); font-size: 0.85rem; }
@@ -2527,6 +2672,170 @@ body.theme-electric .check-box {
     grid-column: 1 / -1;
     width: min(100%, 900px) !important;
     min-width: 0;
+}
+
+.dashboard-page {
+    font-weight: 400;
+}
+
+.dashboard-page :is(h1, h2, h3, h4, strong, b) {
+    font-weight: 500 !important;
+}
+
+body.theme-simple {
+    --bg-1: #080808;
+    --bg-2: #080808;
+    --panel: #111111;
+    --panel-alt: #111111;
+    --card-border: #2d2d2d;
+    --text: #f1f1f1;
+    --muted: #a2a2a2;
+    --accent: #f1f1f1;
+    --accent-strong: #ffffff;
+    --accent-soft: #1d1d1d;
+    --line: #2d2d2d;
+    background: #080808;
+    color: #f1f1f1;
+}
+
+body.theme-simple * {
+    background-image: none !important;
+    box-shadow: none !important;
+}
+
+body.theme-simple .card,
+body.theme-simple .tracker,
+body.theme-simple .workout-list-card,
+body.theme-simple .today-checklist-card {
+    background: #111111;
+    color: #f1f1f1;
+    border-color: #2d2d2d;
+    border-radius: 4px !important;
+}
+
+body.theme-simple nav,
+body.theme-simple #sidebar {
+    background: #0d0d0d;
+    border-color: #2d2d2d;
+}
+
+body.theme-simple .profile-chip {
+    border: 0;
+    border-radius: 4px !important;
+    background: transparent;
+}
+
+body.theme-simple .profile-chip:hover,
+body.theme-simple .profile-chip:focus-within {
+    border: 0;
+    background: #1d1d1d;
+}
+
+body.theme-simple #logout-btn {
+    border: 1px solid #d7d7d7;
+    border-radius: 4px !important;
+    background: #d7d7d7;
+    color: #111111;
+    font-weight: 500;
+}
+
+body.theme-simple #logout-btn:hover {
+    border-color: #ffffff;
+    background: #ffffff;
+    color: #000000;
+}
+
+body.theme-simple nav::after,
+body.theme-simple #sidebar::after {
+    display: none;
+}
+
+body.theme-simple nav a,
+body.theme-simple .profile-name,
+body.theme-simple #sidebar a,
+body.theme-simple .check-label,
+body.theme-simple .body-metric-label {
+    color: #f1f1f1;
+}
+
+body.theme-simple #sidebar a:hover,
+body.theme-simple #sidebar a:hover svg,
+body.theme-simple #sidebar li.active a:hover {
+    background-color: #252525;
+    color: #ffffff;
+    fill: #ffffff;
+}
+
+body.theme-simple .muted,
+body.theme-simple .tracker-label,
+body.theme-simple .tracker-sub,
+body.theme-simple .check-value,
+body.theme-simple .workout-progress-row,
+body.theme-simple .body-metric small {
+    color: #a2a2a2;
+}
+
+body.theme-simple .progress,
+body.theme-simple .macro-bar,
+body.theme-simple .nutrition-calorie-progress {
+    background: #2a2a2a;
+}
+
+body.theme-simple .progress-bar,
+body.theme-simple .macro-bar span {
+    background: #d7d7d7;
+}
+
+body.theme-simple .card::after {
+    display: none;
+}
+
+body.theme-simple .card {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+body.theme-simple .card:hover,
+body.theme-simple .card:focus-within {
+    border-color: #555555;
+    transform: translateY(-2px);
+}
+
+body.theme-simple button,
+body.theme-simple a,
+body.theme-simple input,
+body.theme-simple select {
+    transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+body.theme-simple input,
+body.theme-simple select,
+body.theme-simple textarea {
+    background: #151515;
+    border-color: #3a3a3a;
+    color: #f1f1f1;
+    border-radius: 4px !important;
+}
+
+body.theme-simple button:hover,
+body.theme-simple a:hover {
+    color: #ffffff;
+}
+
+body.theme-simple .theme-btn.active,
+body.theme-simple .theme-btn:hover,
+body.theme-simple .settings-save-btn:hover,
+body.theme-simple .secondary-btn:hover {
+    background: #252525;
+    border-color: #5a5a5a;
+    color: #ffffff;
+}
+
+body.theme-simple .settings-save-btn,
+body.theme-simple .secondary-btn {
+    background: #1b1b1b;
+    border-color: #3a3a3a;
+    color: #f1f1f1;
+    border-radius: 4px !important;
 }
 
 .workout-plan-form {
@@ -2936,6 +3245,102 @@ body.theme-electric .check-box {
     margin-top: 1rem;
 }
 
+.progress-period-control {
+    display: grid;
+    gap: 0.3rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.progress-period-control select {
+    min-width: 9rem;
+}
+
+.progress-stat-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.progress-stat-grid div {
+    min-height: 5.1rem;
+}
+
+.progress-stat-grid small {
+    color: var(--accent-strong);
+    font-size: 0.7rem;
+}
+
+.progress-insight {
+    margin: 1rem 0 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.progress-chart-grid,
+.progress-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: 1100px;
+    margin-top: 1rem;
+}
+
+.progress-chart-card,
+.progress-comparison-card,
+.progress-target-card,
+.progress-measurement-card,
+.progress-photo-card {
+    min-width: 0;
+}
+
+.progress-canvas-wrap {
+    position: relative;
+    height: 15rem;
+}
+
+.progress-canvas-wrap canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.progress-comparisons {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.progress-comparisons div,
+.progress-measurements div {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.progress-comparisons span,
+.progress-comparisons small,
+.progress-measurements span {
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.progress-comparisons small {
+    color: var(--accent-strong);
+}
+
+.progress-measurements div {
+    grid-template-columns: auto 1fr;
+}
+
+.progress-measurements {
+    max-height: 14rem;
+    overflow-y: auto;
+}
+
+.progress-target-card .muted {
+    margin-bottom: 0;
+}
+
 @media (max-width: 700px) {
     .records-grid {
         grid-template-columns: minmax(0, 1fr);
@@ -2949,6 +3354,32 @@ body.theme-electric .check-box {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .progress-chart-grid,
+    .progress-detail-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .progress-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .records-card-heading {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .progress-period-control select {
+        width: 100%;
+    }
+
+    .progress-comparisons div {
+        grid-template-columns: 1fr auto;
+    }
+
+    .progress-comparisons small {
+        grid-column: 1 / -1;
+    }
+
     .records-number-grid {
         grid-template-columns: minmax(0, 1fr);
     }
@@ -2956,5 +3387,9 @@ body.theme-electric .check-box {
     .records-actions {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .ft26-guide-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

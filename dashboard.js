@@ -65,6 +65,19 @@ function normalizeChecklist(items = []) {
         : [];
 }
 
+function getDefaultChecklist(userData = {}) {
+    const weight = Number(userData.trackers?.weight?.current ?? userData.weight);
+    return [
+        {
+            id: 'check-protein-default',
+            label: 'Protein',
+            value: Number.isFinite(weight) && weight > 0 ? `${Math.round(weight * 2)} g` : '2 x body weight (log weight)',
+            done: false
+        },
+        { id: 'check-sleep-default', label: 'Sleep', value: '7-8 hours', done: false }
+    ];
+}
+
 async function getUserChecklist(user = auth.currentUser) {
     if (!user) return [];
 
@@ -73,7 +86,10 @@ async function getUserChecklist(user = auth.currentUser) {
         const userSnap = await getDoc(userRef);
         const data = userSnap.data() || {};
         const savedChecklist = Array.isArray(data.dailyChecklist) ? data.dailyChecklist : [];
-        const normalized = normalizeChecklist(savedChecklist);
+        const normalized = savedChecklist.length ? normalizeChecklist(savedChecklist) : getDefaultChecklist(data);
+        if (!savedChecklist.length) {
+            await setDoc(userRef, { dailyChecklist: normalized }, { merge: true });
+        }
         localStorage.setItem(TODAY_CHECKLIST_STORAGE_KEY, JSON.stringify(normalized));
         return normalized;
     } catch (error) {
@@ -320,15 +336,97 @@ const WEIGHT_HISTORY = [
 
 let weightChart;
 let currentWeightHistory = WEIGHT_HISTORY;
+let weightHistoryData = WEIGHT_HISTORY;
 let renderedWeightHistoryKey = null;
 
 const DEFAULT_NUTRITION_TARGETS = { calories: 2000, protein: 150, carbs: 250, fat: 70, water: 4.5 };
 let nutritionData = { targets: { ...DEFAULT_NUTRITION_TARGETS }, days: {} };
 let recordsData = { lifts: [], cardio: [], measurements: [], photos: [] };
+let progressTrackers = {};
+let progressGoal = 'general-fitness';
+let progressTargets = { workouts: 3, distance: 10, duration: 120 };
+let progressCharts = {};
 
 function recordsDateWithinPeriod(date, days) {
     const timestamp = new Date(`${date}T00:00:00`).getTime();
-    return Number.isFinite(timestamp) && Date.now() - timestamp <= days * 86400000;
+    return Number.isFinite(timestamp) && timestamp <= Date.now() && Date.now() - timestamp < days * 86400000;
+}
+
+function progressRange(days, offset = 0) {
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+    end.setDate(end.getDate() - (offset * days));
+    const start = new Date(end);
+    start.setDate(start.getDate() - days + 1);
+    start.setHours(0, 0, 0, 0);
+    return { start, end };
+}
+
+function progressDateInRange(date, range) {
+    const timestamp = new Date(`${date}T00:00:00`).getTime();
+    return Number.isFinite(timestamp) && timestamp >= range.start.getTime() && timestamp <= range.end.getTime();
+}
+
+function progressEntries(source, range) {
+    return source.filter((entry) => progressDateInRange(entry.date, range));
+}
+
+function progressNumber(value, suffix = '') {
+    return `${nutritionNumber(value)}${suffix}`;
+}
+
+function progressDelta(current, previous, suffix = '') {
+    if (!previous) return 'New';
+    const change = ((current - previous) / Math.abs(previous)) * 100;
+    if (!Number.isFinite(change)) return '—';
+    return `${change > 0 ? '+' : ''}${Math.round(change)}%${suffix}`;
+}
+
+function progressBuckets(days, range) {
+    const bucketSize = days > 30 ? 7 : 1;
+    const buckets = [];
+    for (let cursor = new Date(range.start); cursor <= range.end;) {
+        const start = new Date(cursor);
+        const end = new Date(cursor);
+        end.setDate(end.getDate() + bucketSize - 1);
+        if (end > range.end) end.setTime(range.end.getTime());
+        buckets.push({ start, end, label: days > 30 ? start.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : start.toLocaleDateString(undefined, { weekday: 'short' }), key: getLocalDateKey(start) });
+        cursor = new Date(end);
+        cursor.setDate(cursor.getDate() + 1);
+    }
+    return buckets;
+}
+
+function progressBucketFor(date, buckets) {
+    const timestamp = new Date(`${date}T00:00:00`).getTime();
+    return buckets.find((bucket) => timestamp >= bucket.start.getTime() && timestamp <= bucket.end.getTime());
+}
+
+function destroyProgressChart(name) {
+    if (progressCharts[name]) {
+        progressCharts[name].destroy();
+        delete progressCharts[name];
+    }
+}
+
+function renderProgressChart(name, canvasId, labels, datasets, emptyId, emptyMessage, type = 'line') {
+    const canvas = document.getElementById(canvasId);
+    const empty = document.getElementById(emptyId);
+    destroyProgressChart(name);
+    const hasData = datasets.some((dataset) => dataset.data.some((value) => value > 0 || value !== null));
+    if (!canvas || typeof Chart === 'undefined' || !hasData) {
+        if (canvas) canvas.hidden = true;
+        if (empty) { empty.hidden = false; empty.textContent = emptyMessage; }
+        return;
+    }
+    canvas.hidden = false;
+    if (empty) empty.hidden = true;
+    const accent = getComputedStyle(document.body).getPropertyValue('--accent-strong').trim() || '#70ff72';
+    progressCharts[name] = new Chart(canvas, {
+        type,
+        data: { labels, datasets: datasets.map((dataset, index) => ({ borderColor: index ? '#ffbd69' : accent, backgroundColor: index ? 'rgba(255, 189, 105, 0.18)' : 'rgba(112, 255, 114, 0.18)', borderWidth: 2, pointRadius: 3, tension: 0.3, fill: type === 'line', ...dataset })) },
+        options: { responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' }, plugins: { legend: { display: datasets.length > 1, labels: { color: '#bdbdbd' } } }, scales: { x: { grid: { display: false }, ticks: { color: '#bdbdbd', maxRotation: 0, autoSkip: true, maxTicksLimit: 10 } }, y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.08)' }, ticks: { color: '#bdbdbd' } } } }
+    });
 }
 
 async function saveRecordsData(user = auth.currentUser) {
@@ -337,16 +435,7 @@ async function saveRecordsData(user = auth.currentUser) {
 }
 
 function renderRecords() {
-    const period = Number(document.getElementById('records-period')?.value || 7);
-    const lifts = recordsData.lifts.filter((entry) => recordsDateWithinPeriod(entry.date, period));
-    const cardio = recordsData.cardio.filter((entry) => recordsDateWithinPeriod(entry.date, period));
-    const measurements = recordsData.measurements.filter((entry) => recordsDateWithinPeriod(entry.date, period));
-    const setText = (id, value) => { const element = document.getElementById(id); if (element) element.textContent = value; };
-    const volume = lifts.reduce((total, entry) => total + Number(entry.weight || 0) * Number(entry.reps || 0), 0);
-    setText('records-workout-count', Object.keys(workoutLogs).filter((date) => recordsDateWithinPeriod(date, period)).length);
-    setText('records-volume-total', `${nutritionNumber(volume)} kg`);
-    setText('records-cardio-distance', `${nutritionNumber(cardio.reduce((total, entry) => total + Number(entry.distance || 0), 0))} km`);
-    setText('records-measurement-count', measurements.length);
+    renderProgress();
 
     const bestByExercise = {};
     recordsData.lifts.forEach((entry) => {
@@ -360,24 +449,108 @@ function renderRecords() {
         personalRecords.innerHTML = entries.length ? entries.map((entry) => `<li><div><strong>${escapeHtml(entry.exercise)}</strong><span>${nutritionNumber(entry.weight)} kg × ${entry.reps} reps</span></div><b>Est. 1RM ${nutritionNumber(entry.estimatedOneRepMax)} kg</b></li>`).join('') : '<li class="empty-state">No lifts recorded yet.</li>';
     }
 
-    const progressChart = document.getElementById('records-progress-chart');
-    if (progressChart) {
-        const days = Array.from({ length: period === 7 ? 7 : 10 }, (_, index) => {
-            const date = new Date();
-            date.setDate(date.getDate() - ((period === 7 ? 6 : 9) - index));
-            const key = getLocalDateKey(date);
-            const count = workoutLogs[key]?.completedExerciseIds?.length || 0;
-            return { label: date.toLocaleDateString(undefined, { weekday: 'short' }), count };
-        });
-        const max = Math.max(1, ...days.map((entry) => entry.count));
-        progressChart.innerHTML = days.map((entry) => `<div class="records-chart-day"><span class="records-chart-track"><i style="height:${(entry.count / max) * 100}%"></i></span><small>${entry.label}</small></div>`).join('');
-    }
-
     const photos = document.getElementById('progress-photo-list');
     if (photos) photos.innerHTML = recordsData.photos.length ? recordsData.photos.map((photo) => `<li><a href="${escapeHtml(photo.url)}" target="_blank" rel="noopener">${escapeHtml(photo.date)} photo</a></li>`).join('') : '<li class="empty-state">No progress photos saved.</li>';
+    const photoHistory = document.getElementById('progress-photo-history');
+    if (photoHistory) photoHistory.innerHTML = recordsData.photos.length ? [...recordsData.photos].sort((a, b) => b.date.localeCompare(a.date)).map((photo) => `<li><a href="${escapeHtml(photo.url)}" target="_blank" rel="noopener">${escapeHtml(photo.date)} photo</a></li>`).join('') : '<li class="empty-state">Save a photo reference in Records to compare your changes over time.</li>';
 }
 
-document.getElementById('records-period')?.addEventListener('change', renderRecords);
+function renderProgress() {
+    const days = Number(document.getElementById('progress-period')?.value || 7);
+    const current = progressRange(days);
+    const previous = progressRange(days, 1);
+    const buckets = progressBuckets(days, current);
+    const previousBuckets = progressBuckets(days, previous);
+    const currentLifts = progressEntries(recordsData.lifts, current);
+    const previousLifts = progressEntries(recordsData.lifts, previous);
+    const currentCardio = progressEntries(recordsData.cardio, current);
+    const previousCardio = progressEntries(recordsData.cardio, previous);
+    const currentMeasurements = progressEntries(recordsData.measurements, current);
+    const weightHistory = (progressTrackers.weight?.history || []).map((entry) => ({ date: entry.date || entry.label, value: Number(entry.value ?? entry.weight) })).filter((entry) => Number.isFinite(entry.value) && entry.date);
+    const currentWeights = progressEntries(weightHistory, current);
+    const workoutDates = Object.keys(workoutLogs).filter((date) => progressDateInRange(date, current));
+    const previousWorkoutDates = Object.keys(workoutLogs).filter((date) => progressDateInRange(date, previous));
+    const workoutCount = workoutDates.filter((date) => (workoutLogs[date]?.completedExerciseIds || []).length).length;
+    const previousWorkoutCount = previousWorkoutDates.filter((date) => (workoutLogs[date]?.completedExerciseIds || []).length).length;
+    const completedExercises = workoutDates.reduce((total, date) => total + (workoutLogs[date]?.completedExerciseIds || []).length, 0);
+    const plannedExercises = workoutDates.reduce((total, date) => total + Number(workoutLogs[date]?.plannedExerciseCount || 0), 0);
+    const previousCompleted = previousWorkoutDates.reduce((total, date) => total + (workoutLogs[date]?.completedExerciseIds || []).length, 0);
+    const previousPlanned = previousWorkoutDates.reduce((total, date) => total + Number(workoutLogs[date]?.plannedExerciseCount || 0), 0);
+    const completionRate = plannedExercises ? Math.round((completedExercises / plannedExercises) * 100) : null;
+    const previousCompletionRate = previousPlanned ? Math.round((previousCompleted / previousPlanned) * 100) : null;
+    const volume = currentLifts.reduce((total, entry) => total + Number(entry.weight || 0) * Number(entry.reps || 0), 0);
+    const previousVolume = previousLifts.reduce((total, entry) => total + Number(entry.weight || 0) * Number(entry.reps || 0), 0);
+    const distance = currentCardio.reduce((total, entry) => total + Number(entry.distance || 0), 0);
+    const previousDistance = previousCardio.reduce((total, entry) => total + Number(entry.distance || 0), 0);
+    const duration = currentCardio.reduce((total, entry) => total + Number(entry.duration || 0), 0);
+    const previousDuration = previousCardio.reduce((total, entry) => total + Number(entry.duration || 0), 0);
+    const pace = distance ? duration / distance : null;
+    const setText = (id, value) => { const element = document.getElementById(id); if (element) element.textContent = value; };
+    setText('progress-workout-count', workoutCount);
+    setText('progress-completion-rate', completionRate === null ? '—' : `${completionRate}%`);
+    setText('progress-volume-total', progressNumber(volume, ' kg'));
+    setText('progress-cardio-total', progressNumber(distance, ' km'));
+    setText('progress-cardio-duration', progressNumber(duration, ' min'));
+    setText('progress-cardio-pace', pace ? `${pace.toFixed(1)} min` : '—');
+    setText('progress-streak', `${Number(progressTrackers.streak?.current) || 0} days`);
+    setText('progress-workout-change', progressDelta(workoutCount, previousWorkoutCount));
+    setText('progress-completion-change', completionRate === null || previousCompletionRate === null ? 'Needs planned data' : progressDelta(completionRate, previousCompletionRate));
+    setText('progress-volume-change', progressDelta(volume, previousVolume));
+    setText('progress-cardio-change', progressDelta(distance, previousDistance));
+    setText('progress-duration-change', progressDelta(duration, previousDuration));
+    setText('progress-streak-best', `Best: ${Number(progressTrackers.streak?.best) || 0} days`);
+    const goalLabels = { 'build-muscle': 'Build muscle', 'lose-fat': 'Lose fat', 'improve-endurance': 'Improve endurance', 'general-fitness': 'General fitness' };
+    setText('progress-goal-insight', `${goalLabels[progressGoal] || 'General fitness'} focus: use these trends to keep your training consistent.`);
+    const activity = buckets.map((bucket) => workoutDates.filter((date) => progressBucketFor(date, [bucket])).length);
+    renderProgressChart('activity', 'progress-activity-chart', buckets.map((bucket) => bucket.label), [{ label: 'Workout days', data: activity, type: 'bar', borderRadius: 3 }], 'progress-activity-empty', 'Complete a planned workout to start your activity trend.', 'bar');
+    renderProgressChart('weight', 'progress-weight-chart', currentWeights.map((entry) => entry.date), [{ label: 'Weight (kg)', data: currentWeights.map((entry) => entry.value) }], 'progress-weight-empty', 'Log at least two weight entries to see a trend.');
+    const strengthValues = buckets.map((bucket) => currentLifts.filter((entry) => progressBucketFor(entry.date, [bucket])).reduce((total, entry) => total + Number(entry.weight || 0) * Number(entry.reps || 0), 0));
+    renderProgressChart('strength', 'progress-strength-chart', buckets.map((bucket) => bucket.label), [{ label: 'Volume (kg)', data: strengthValues }], 'progress-strength-empty', 'Log lifts in Records to see strength and volume build over time.');
+    const cardioValues = buckets.map((bucket) => currentCardio.filter((entry) => progressBucketFor(entry.date, [bucket])).reduce((total, entry) => total + Number(entry.distance || 0), 0));
+    renderProgressChart('cardio', 'progress-cardio-chart', buckets.map((bucket) => bucket.label), [{ label: 'Distance (km)', data: cardioValues }], 'progress-cardio-empty', 'Log cardio distance and duration in Records to see your endurance trend.');
+    const comparisons = document.getElementById('progress-comparisons');
+    if (comparisons) comparisons.innerHTML = [['Workouts', workoutCount, previousWorkoutCount, ''], ['Lift volume', volume, previousVolume, ' kg'], ['Cardio distance', distance, previousDistance, ' km'], ['Cardio duration', duration, previousDuration, ' min']].map(([label, value, oldValue, suffix]) => `<div><span>${label}</span><strong>${progressNumber(value, suffix)}</strong><small>${progressDelta(value, oldValue)} vs previous</small></div>`).join('');
+    const targetForm = document.getElementById('progress-target-form');
+    if (targetForm) {
+        const targetDays = Math.max(1, Math.ceil(days / 7));
+        const targetWorkoutTotal = progressTargets.workouts * targetDays;
+        const targetDistanceTotal = progressTargets.distance * targetDays;
+        const targetDurationTotal = progressTargets.duration * targetDays;
+        setText('progress-target-insight', `Target progress: ${Math.round((workoutCount / Math.max(1, targetWorkoutTotal)) * 100)}% workouts · ${Math.round((distance / Math.max(1, targetDistanceTotal)) * 100)}% distance · ${Math.round((duration / Math.max(1, targetDurationTotal)) * 100)}% duration.`);
+        ['workouts', 'distance', 'duration'].forEach((name) => { const input = document.getElementById(`progress-target-${name}`); if (input) input.value = progressTargets[name]; });
+    }
+    const measurementContainer = document.getElementById('progress-measurements');
+    if (measurementContainer) measurementContainer.innerHTML = currentMeasurements.length ? [...currentMeasurements].sort((a, b) => b.date.localeCompare(a.date)).map((entry) => `<div><strong>${escapeHtml(entry.date)}</strong><span>Waist ${entry.waist || '—'} cm · Chest ${entry.chest || '—'} cm · Arms ${entry.arms || '—'} cm · Body fat ${entry.bodyFat || '—'}%</span></div>`).join('') : '<p class="empty-state">Log waist, chest, arms, or body fat measurements in Records to see change over time.</p>';
+    const previousBestByExercise = {};
+    previousLifts.forEach((entry) => { const key = entry.exercise.trim().toLowerCase(); const value = Number(entry.weight) * (1 + Number(entry.reps) / 30); previousBestByExercise[key] = Math.max(previousBestByExercise[key] || 0, value); });
+    const currentBestByExercise = {};
+    currentLifts.forEach((entry) => { const key = entry.exercise.trim().toLowerCase(); const value = Number(entry.weight) * (1 + Number(entry.reps) / 30); currentBestByExercise[key] = Math.max(currentBestByExercise[key] || 0, value); });
+    const personalBestContainer = document.getElementById('progress-prs');
+    if (personalBestContainer) {
+        const improvements = Object.keys(currentBestByExercise).map((key) => ({ name: currentLifts.find((entry) => entry.exercise.trim().toLowerCase() === key)?.exercise || key, value: currentBestByExercise[key], previous: previousBestByExercise[key] || 0 })).filter((entry) => !entry.previous || entry.value > entry.previous).sort((a, b) => b.value - a.value);
+        personalBestContainer.innerHTML = improvements.length ? improvements.slice(0, 5).map((entry) => `<div><span>${escapeHtml(entry.name)}</span><strong>${nutritionNumber(entry.value)} kg</strong><small>${entry.previous ? `+${nutritionNumber(entry.value - entry.previous)} kg` : 'New best'}</small></div>`).join('') : '<p class="empty-state">Log the same lift in two periods to see personal-best improvements.</p>';
+    }
+}
+
+document.getElementById('progress-period')?.addEventListener('change', renderProgress);
+document.getElementById('progress-target-form')?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const user = auth.currentUser;
+    if (!user) return;
+    progressTargets = {
+        workouts: Number(document.getElementById('progress-target-workouts').value),
+        distance: Number(document.getElementById('progress-target-distance').value),
+        duration: Number(document.getElementById('progress-target-duration').value)
+    };
+    try {
+        await setDoc(doc(db, 'users', user.uid), { progressTargets }, { merge: true });
+        setSettingsStatus('progress-target-status', 'Targets saved.');
+        renderProgress();
+    } catch (error) {
+        setSettingsStatus('progress-target-status', 'Could not save targets.', true);
+        console.error(error);
+    }
+});
 document.getElementById('record-entry-form')?.addEventListener('submit', async (event) => {
     event.preventDefault();
     recordsData.lifts.push({ id: `lift-${Date.now()}`, date: getLocalDateKey(), exercise: document.getElementById('record-exercise').value.trim(), weight: Number(document.getElementById('record-weight').value), reps: Number(document.getElementById('record-reps').value) });
@@ -643,7 +816,14 @@ function renderWeightChart(history = currentWeightHistory) {
 
 renderWeightChart();
 document.getElementById('weight-range').addEventListener('change', (event) => {
-    renderWeightChart(event.target.value === 'all' ? WEIGHT_HISTORY : WEIGHT_HISTORY.slice(-5));
+    const history = event.target.value === 'all' ? weightHistoryData : weightHistoryData.filter((entry) => {
+        const timestamp = new Date(`${entry.date}T00:00:00`).getTime();
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+        return Number.isFinite(timestamp) && timestamp >= startOfMonth.getTime();
+    });
+    renderWeightChart(history);
 });
 
 const sidebarItems = [...document.querySelectorAll('#sidebar li[data-section]')];
@@ -652,6 +832,7 @@ const settingsPage = document.getElementById('settings-page');
 const nutritionPage = document.getElementById('nutrition-page');
 const progressPage = document.getElementById('progress-page');
 const recordsPage = document.getElementById('records-page');
+const aboutFt26Page = document.getElementById('about-ft26-page');
 const dashboardCards = document.querySelector('.cards-container');
 
 document.getElementById('profile-settings-link')?.addEventListener('click', () => {
@@ -668,12 +849,14 @@ function setActiveSidebarSection(section) {
     const isNutritionPage = section === 'nutrition';
     const isProgressPage = section === 'progress';
     const isRecordsPage = section === 'records';
+    const isAboutFt26Page = section === 'about-ft26';
     if (workoutPage) workoutPage.hidden = !isWorkoutPage;
     if (settingsPage) settingsPage.hidden = !isSettingsPage;
     if (nutritionPage) nutritionPage.hidden = !isNutritionPage;
     if (progressPage) progressPage.hidden = !isProgressPage;
     if (recordsPage) recordsPage.hidden = !isRecordsPage;
-    if (dashboardCards) dashboardCards.hidden = isWorkoutPage || isSettingsPage || isNutritionPage || isProgressPage || isRecordsPage;
+    if (aboutFt26Page) aboutFt26Page.hidden = !isAboutFt26Page;
+    if (dashboardCards) dashboardCards.hidden = isWorkoutPage || isSettingsPage || isNutritionPage || isProgressPage || isRecordsPage || isAboutFt26Page;
     setMobileMenu(false);
 }
 
@@ -869,7 +1052,7 @@ function renderWorkoutLists() {
         if (logDay !== getTodayWorkoutDay()) return;
         const ids = [...document.querySelectorAll(`#${list.id} [data-workout-exercise]`)]
             .filter((item) => item.checked).map((item) => item.dataset.workoutExercise);
-        workoutLogs[today] = { completedExerciseIds: ids };
+        workoutLogs[today] = { completedExerciseIds: ids, plannedExerciseCount: todayWorkout.exercises.length };
         renderWorkoutLists();
         if (ids.length === todayWorkout.exercises.length && todayWorkout.exercises.length) await recordCompletedWorkout();
         if (auth.currentUser) {
@@ -990,7 +1173,7 @@ const applyCardTheme = (enabled) => {
 };
 
 const applyTheme = (theme) => {
-    document.body.classList.remove('theme-electric', 'theme-amber', 'theme-crimson', 'theme-monochrome');
+    document.body.classList.remove('theme-electric', 'theme-amber', 'theme-crimson', 'theme-monochrome', 'theme-simple');
     if (theme !== 'green') {
         document.body.classList.add(`theme-${theme}`);
     }
@@ -1007,7 +1190,7 @@ themeButtons.forEach((button) => {
     button.addEventListener('click', () => applyTheme(button.dataset.theme));
 });
 
-applyTheme(localStorage.getItem('fitness-tracker-theme') || 'monochrome');
+applyTheme(localStorage.getItem('fitness-tracker-theme') || 'simple');
 applyCardTheme(localStorage.getItem('fitness-tracker-card-theme') === 'true');
 
 cardThemeToggle?.addEventListener('change', (event) => {
@@ -1157,7 +1340,15 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
+    let userSnap;
+    try {
+        userSnap = await getDoc(userRef);
+    } catch (error) {
+        console.error('Could not load dashboard data:', error);
+        document.body.classList.remove('app-status-loading');
+        notify('Dashboard data could not be loaded. Please try again.');
+        return;
+    }
 
     // If trackers data is missing, initialize with safe defaults
     const initialTrackers = {
@@ -1185,17 +1376,21 @@ onAuthStateChanged(auth, async (user) => {
     } catch (error) {
         console.error('Dashboard data loading failed:', error);
         notify('Some dashboard data could not be loaded. Please try again.');
-    } finally {
-        document.body.classList.remove('app-status-loading');
     }
 
     // Listen for realtime updates to user document to update trackers live
     onSnapshot(userRef, (snap) => {
-        if (!snap.exists()) return;
+        if (!snap.exists()) {
+            document.body.classList.remove('app-status-loading');
+            return;
+        }
         const d = snap.data();
         workoutPlan = d.workoutPlan || {};
         workoutLogs = d.workoutLogs || {};
         recordsData = { lifts: [], cardio: [], measurements: [], photos: [], ...(d.records || {}) };
+        progressTrackers = d.trackers || d.stats || {};
+        progressGoal = d.goal || 'general-fitness';
+        progressTargets = { workouts: 3, distance: 10, duration: 120, ...(d.progressTargets || {}) };
         const todayPlan = workoutPlan[getTodayWorkoutDay()];
         if (todayPlan?.type === 'custom') customExercises = [...(todayPlan.exercises || [])];
         renderWorkoutPlanEditor();
@@ -1208,7 +1403,7 @@ onAuthStateChanged(auth, async (user) => {
             };
             renderNutrition();
         }
-        const trackers = d.trackers || d.stats || {};
+        const trackers = progressTrackers;
         const currentWeight = Number(trackers.weight?.current ?? d.weight);
         const height = Number(d.height);
         const bmi = Number.isFinite(currentWeight) && Number.isFinite(height) && height > 0
@@ -1236,10 +1431,19 @@ onAuthStateChanged(auth, async (user) => {
                 }))
                 .filter((entry) => entry.date && Number.isFinite(entry.value))
             : [];
+        weightHistoryData = weightHistory;
         if (weightHistory.length > 1) {
-            const weightHistoryKey = JSON.stringify(weightHistory);
+            const selectedRange = document.getElementById('weight-range')?.value || 'month';
+            const chartHistory = selectedRange === 'all' ? weightHistoryData : weightHistoryData.filter((entry) => {
+                const timestamp = new Date(`${entry.date}T00:00:00`).getTime();
+                const startOfMonth = new Date();
+                startOfMonth.setDate(1);
+                startOfMonth.setHours(0, 0, 0, 0);
+                return Number.isFinite(timestamp) && timestamp >= startOfMonth.getTime();
+            });
+            const weightHistoryKey = JSON.stringify([selectedRange, chartHistory]);
             if (weightHistoryKey !== renderedWeightHistoryKey) {
-                renderWeightChart(weightHistory);
+                renderWeightChart(chartHistory);
                 renderedWeightHistoryKey = weightHistoryKey;
             }
         }
@@ -1299,6 +1503,7 @@ onAuthStateChanged(auth, async (user) => {
             day.classList.toggle('complete', index < Math.min(streakCur, streakDays.length));
             day.textContent = index < Math.min(streakCur, streakDays.length) ? '✓' : '';
         });
+        document.body.classList.remove('app-status-loading');
     }, (error) => {
         console.error('Realtime dashboard updates failed:', error);
         document.body.classList.remove('app-status-loading');
