@@ -3022,7 +3022,6 @@ body.theme-simple .secondary-btn {
     }
 }
 
-/* Balanced desktop dashboard: graph and body metrics beside a tall workout card. */
 @media (min-width: 901px) {
     .dashboard-page #weight-progress-card {
         grid-column: 1 / span 7;

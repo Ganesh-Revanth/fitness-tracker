@@ -26,6 +26,7 @@ form.addEventListener("submit", async (e) => {
     try{
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
+        const today = new Date().toISOString().slice(0, 10);
 
         await sendEmailVerification(user);
         
@@ -38,6 +39,13 @@ form.addEventListener("submit", async (e) => {
             weight,
             height,
             createdAt: Date.now(),
+            trackers: {
+                weight: {
+                    current: weight,
+                    change: null,
+                    history: [{ date: today, value: weight }]
+                }
+            },
             dailyChecklist: []
         });
         await signOut(auth);

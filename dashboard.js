@@ -804,8 +804,8 @@ function renderWeightChart(history = currentWeightHistory) {
             scales: {
                 x: { grid: { display: false }, ticks: { color: '#bdbdbd' } },
                 y: {
-                    min: Math.floor(Math.min(...values) - 0.5),
-                    max: Math.ceil(Math.max(...values) + 0.5),
+                            min: values.length ? Math.floor(Math.min(...values) - 0.5) : 0,
+                            max: values.length ? Math.ceil(Math.max(...values) + 0.5) : 1,
                     grid: { color: 'rgba(255, 255, 255, 0.08)' },
                     ticks: { color: '#bdbdbd' }
                 }
@@ -1431,21 +1431,23 @@ onAuthStateChanged(auth, async (user) => {
                 }))
                 .filter((entry) => entry.date && Number.isFinite(entry.value))
             : [];
-        weightHistoryData = weightHistory;
-        if (weightHistory.length > 1) {
-            const selectedRange = document.getElementById('weight-range')?.value || 'month';
-            const chartHistory = selectedRange === 'all' ? weightHistoryData : weightHistoryData.filter((entry) => {
-                const timestamp = new Date(`${entry.date}T00:00:00`).getTime();
-                const startOfMonth = new Date();
-                startOfMonth.setDate(1);
-                startOfMonth.setHours(0, 0, 0, 0);
-                return Number.isFinite(timestamp) && timestamp >= startOfMonth.getTime();
-            });
-            const weightHistoryKey = JSON.stringify([selectedRange, chartHistory]);
-            if (weightHistoryKey !== renderedWeightHistoryKey) {
-                renderWeightChart(chartHistory);
-                renderedWeightHistoryKey = weightHistoryKey;
-            }
+        weightHistoryData = weightHistory.length
+            ? weightHistory
+            : Number.isFinite(currentWeight) && currentWeight > 0
+                ? [{ date: getLocalDateKey(), value: currentWeight }]
+                : [];
+        const selectedRange = document.getElementById('weight-range')?.value || 'month';
+        const chartHistory = selectedRange === 'all' ? weightHistoryData : weightHistoryData.filter((entry) => {
+            const timestamp = new Date(`${entry.date}T00:00:00`).getTime();
+            const startOfMonth = new Date();
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
+            return Number.isFinite(timestamp) && timestamp >= startOfMonth.getTime();
+        });
+        const weightHistoryKey = JSON.stringify([selectedRange, chartHistory]);
+        if (weightHistoryKey !== renderedWeightHistoryKey) {
+            renderWeightChart(chartHistory);
+            renderedWeightHistoryKey = weightHistoryKey;
         }
         const weightEl = document.getElementById('weight-value');
         const weightChangeEl = document.getElementById('weight-change');
