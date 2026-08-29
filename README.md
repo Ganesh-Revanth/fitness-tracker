@@ -71,7 +71,7 @@ Here are a few views from the app to give GitHub visitors a better sense of the 
 
 ### Dashboard
 
-![Fitness Tracker dashboard](assets/screenshots/Screenshot%202026-08-29%20at%2012-05-40%20Fitness%20Tracker.png)
+![Fitness Tracker dashboard](assets/screenshots/dashboard.png)
 
 ### Login screen
 
