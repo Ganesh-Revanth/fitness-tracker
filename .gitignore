@@ -1,4 +1,7 @@
 firebase.js
+skills-lock.json
+firebase.json
+.firebaserc
 /.firebase/
 /.agents/
 /.claude/
